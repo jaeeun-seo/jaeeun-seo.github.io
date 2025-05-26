@@ -22,32 +22,6 @@
 
   <!-- Load CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
-
-  <script>
-  const slider = document.getElementById('theme-switch');
-  const root   = document.documentElement;
-
-  // 1) 로컬 스토리지에 테마 설정이 있으면 그 값을 쓰고
-  const saved = localStorage.getItem('theme');
-  // 2) 없으면 시스템 설정(prefers-color-scheme)을 사용
-  const systemPrefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = saved === 'dark' || (saved === null && systemPrefDark);
-
-  if (isDark) {
-    root.dataset.theme = 'dark';
-    slider.classList.add('active');
-  } else {
-    root.dataset.theme = 'light';
-  }
-
-  // 토글 클릭 시 상호작용은 기존 코드 그대로
-  slider.addEventListener('click', () => {
-    const nextIsDark = slider.classList.toggle('active');
-    const nextTheme = nextIsDark ? 'dark' : 'light';
-    root.dataset.theme = nextTheme;
-    localStorage.setItem('theme', nextTheme);
-  });
-</script>
 </head>
 <body>
   <div class="container">
@@ -77,4 +51,26 @@
     </main>
   </div>
 </body>
+<script>
+  const slider = document.getElementById('theme-switch');
+  const root   = document.documentElement;
+
+  const saved = localStorage.getItem('theme');
+  const systemPrefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const isDark = saved === 'dark' || (saved === null && systemPrefDark);
+
+  if (isDark) {
+    root.dataset.theme = 'dark';
+    slider.classList.add('active');
+  } else {
+    root.dataset.theme = 'light';
+  }
+
+  slider.addEventListener('click', () => {
+    const nextIsDark = slider.classList.toggle('active');
+    const nextTheme = nextIsDark ? 'dark' : 'light';
+    root.dataset.theme = nextTheme;
+    localStorage.setItem('theme', nextTheme);
+  });
+</script>
 </html>
