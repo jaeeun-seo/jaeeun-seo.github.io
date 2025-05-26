@@ -1,0 +1,229 @@
+/* --- 테마 컬러 변수 --- */
+:root {
+  --bg: #fff;
+  --fg: #111;
+  --link: #039827;
+  --link-dark: #02661E;
+  --line-style: 1px solid #ddd;
+  --muted: #666;
+  --font-base: 1rem;
+  --font-small: 0.95rem;
+  --font-smaller: 0.85rem;
+  --font-xl: 1.3rem;
+  --font-weight-base: 400;
+  --font-weight-semibold: 600;
+}
+[data-theme="dark"] {
+  --bg: #171717;
+  --fg: #f6f6f6;
+  --link: #66aaff;
+  --link-dark: #3388DD;
+  --muted: #aaa;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Raleway", sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.6;
+  font-size: var(--font-base);
+  font-weight: var(--font-weight-base);
+}
+h1, h2 { 
+  font-family: 'Work Sans', sans-serif;
+}
+.semi-bold {
+  font-weight: var(--font-weight-semibold);
+}
+.font-small {
+  font-size: var(--font-small);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  max-width: 1150px;
+  margin: 2rem auto;
+  gap: 2rem;
+  padding: 0 3rem;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  flex: 0 0 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 2rem;
+  margin-bottom: auto;
+}
+.profile-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 5.5rem;
+  margin-bottom: 1rem;
+}
+.name {
+  font-size: var(--font-xl);
+  margin-bottom: 0.2rem;
+  font-weight: var(--font-weight-base);
+}
+.affiliation {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+.social {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.social a {
+  font-size: 1.2rem;
+  color: var(--fg);
+  text-decoration: none;
+  &:hover {
+    color: var(--link-dark);
+    transform: translateY(-2px);
+  }
+}
+.social a i {
+  transition: transform 0.2s;
+}
+.social a:hover i {
+  transform: rotate(15deg) scale(1.1);
+}
+.sidebar-footer {
+  margin-top: 0rem;
+  color: var(--muted);
+  font-size: var(--font-smaller);
+}
+/* dark mode switch */
+.theme-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+  user-select: none;
+}
+.theme-switch .switch-label {
+  font-size: var(--font-smaller);
+  color: var(--fg);
+}
+.theme-switch .switch-slider {
+  position: relative;
+  width: 25px;
+  height: 16px;
+  background: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.theme-switch .switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+.theme-switch .switch-slider.active {
+  background: var(--link);
+}
+.theme-switch .switch-slider.active::before {
+  transform: translateX(8.5px);
+}
+
+
+/* --- Main Contents --- */
+.content {
+  flex: 1;
+}
+.content h1, 
+.content h2 {
+  font-size: var(--font-xl);
+  margin-bottom: 1rem;
+}
+.content h2 {
+  padding-bottom: 0.3rem;
+  margin-top: 2.5rem;
+  border-bottom: var(--line-style);
+}
+.WP {
+  margin-bottom: 1rem;
+}
+.detail {
+  color: var(--muted);
+  font-style: italic;
+  font-size: var(--font-small);
+}
+.WIP {
+  margin-bottom: 0.5rem;
+}
+.content p {
+  margin-bottom: 1rem;
+}
+.content ul {
+  list-style: disc inside;
+  margin-bottom: 1rem;
+}
+
+.content a {
+  color: var(--link);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    color: var(--link-dark);
+  }
+}
+
+.content .author {
+  color: var(--fg);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+    color: var(--fg);
+  }
+}
+
+/* --- Responsive Layout --- */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: 1fr;
+    margin: 1rem auto;
+  }
+  .sidebar {
+    position: relative;
+    top: auto;
+    flex-basis: 0;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0rem;
+    padding: 1rem;
+    border-bottom: var(--line-style);
+  }
+  .profile-img { 
+    width: 80px;
+    height: 80px;
+    margin: 0em;
+  }
+  .name, 
+  .affiliation { 
+    width: 100%; 
+    text-align: center; 
+    margin-bottom: 0;
+  }
+  .social, 
+  .theme-switch, 
+  .sidebar-footer { 
+    display: none;
+  }
+}

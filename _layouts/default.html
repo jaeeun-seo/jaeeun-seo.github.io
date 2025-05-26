@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ site.title }}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,500,600,700" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-…"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Load CSS -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">
+      <img src="{{ '/assets/images/profile.jpg' | relative_url }}" alt="Profile" class="profile-img">
+      <h2 class="name">{{ site.title }}</h2>
+      <p class="affiliation">{{ site.affiliation }}</p>
+
+      <!-- <div class="social"> -->
+	<!-- <a href="https://github.com/username" style="font-size: 1.5rem"><i class="fab fa-github"></i></a> -->
+        <!-- <a href="https://www.linkedin.com/in/username" style="font-size: 1.5rem"><i class="fab fa-linkedin"></i></a> -->
+        <!-- <a href="https://scholar.google.com/citations?user=XXX" style="font-size: 1.5rem"><i class="fab fa-google"></i></a> -->
+      <!-- </div> -->
+
+      <footer class="sidebar-footer">
+        <p> © {{ site.time | date: "%Y" }}</p>
+      </footer>
+
+      <p class="theme-switch">
+        <span class="switch-label">Dark Mode</span>
+	<span class="switch-slider" id="theme-switch"></span>
+      </p>
+    </aside>
+
+    <main class="content">
+      {{ content }}
+    </main>
+  </div>
+
+  <script>
+    const slider = document.getElementById('theme-switch');
+    const root = document.documentElement;
+    const saved = localStorage.getItem('theme');
+    if (saved === 'dark') {
+      root.dataset.theme = 'dark';
+      slider.classList.add('active');
+    }
+
+    slider.addEventListener('click', () => {
+      const isDark = slider.classList.toggle('active');
+      const next = isDark ? 'dark' : 'light';
+      root.dataset.theme = next;
+      localStorage.setItem('theme', next);
+    });
+  </script>
+</body>
+</html>
