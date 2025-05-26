@@ -1,6 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>홍길동 | KAIST</title>
+
+  <!-- 시스템 폰트 스택 -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <style>
+    :root {
+      --bg: #fff;
+      --fg: #111;
+      --link: #0066cc;
+    }
+    [data-theme="dark"] {
+      --bg: #111;
+      --fg: #eee;
+      --link: #66aaff;
+    }
+    body {
+      margin: 0;
+      padding: 2rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--link); text-decoration: none; }
+    header, section, footer { max-width: 600px; margin: auto; }
+    header h1 { margin-bottom: 0.2rem; }
+    header p { margin-top: 0; color: #666; }
+    .toggle-btn {
+      position: fixed; top: 1rem; right: 1rem;
+      background: none; border: none; cursor: pointer;
+      font-size: 1rem;
+    }
+    hr { margin: 2rem 0; border-color: #ddd; }
+    ul { padding-left: 1.2rem; }
+  </style>
+</head>
 <body>
-.
+  <button class="toggle-btn" id="theme-toggle">Dark Mode</button>
+
+  <header>
+    <h1>홍길동</h1>
+    <p>KAIST</p>
+    <p>
+      <a href="#">GitHub</a> •
+      <a href="#">LinkedIn</a> •
+      <a href="#">Google Scholar</a>
+    </p>
+  </header>
+
+  <section>
+    <h2>About Me</h2>
+    <p>KAIST 전기 및 전자공학부 조교수입니다. …</p>
+  </section>
+
+  <section>
+    <h2>Publications</h2>
+    <ul>
+      <li>
+        <strong>논문 제목 (2025)</strong><br>
+        <a href="#">paper</a> • <a href="#">code</a><br>
+        홍길동, 김연구 … 학회명
+      </li>
+      <!-- 더 추가 -->
+    </ul>
+  </section>
+
+  <section>
+    <h2>Contact</h2>
+    <p>Email: hong.gildong@kaist.ac.kr<br>
+       Office: N1-914, 291 Daehak-ro, Daejeon</p>
+  </section>
+
+  <footer>
+    <hr>
+    <p>© 2025 홍길동</p>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('theme-toggle');
+    const root = document.documentElement;
+    btn.addEventListener('click', () => {
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      btn.textContent = next === 'light' ? 'Dark Mode' : 'Light Mode';
+      localStorage.setItem('theme', next);
+    });
+    // 로컬 스토리지에 저장된 테마 적용
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      root.dataset.theme = saved;
+      btn.textContent = saved === 'light' ? 'Dark Mode' : 'Light Mode';
+    }
+  </script>
 </body>
 </html>
