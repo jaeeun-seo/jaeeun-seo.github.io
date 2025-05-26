@@ -23,6 +23,7 @@ title: Jaeeun Seo
 email: jaeeun.seo@northwestern.edu
 affiliation: Northwestern University
 url: "https://jaeeun-seo.github.io"
+baseurl: ""        #
 description: 'Welcome to my website! I am a Postdoctoral Scholar in the Department of Economics at Northwestern University. My research interests are in <span class="semi-bold">international trade</span>, <span class="semi-bold">macroeconomics</span>, and <span class="semi-bold">urban economics</span>. I received my Ph.D. in Economics from MIT in 2024.'
 CV_file: "https://jaeeun-seo.github.io/files/Seo_CV.pdf"
 
