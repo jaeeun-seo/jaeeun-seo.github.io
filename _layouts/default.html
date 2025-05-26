@@ -50,27 +50,27 @@
       {{ content }}
     </main>
   </div>
+  <script>
+    const slider = document.getElementById('theme-switch');
+    const root   = document.documentElement;
+
+    const saved = localStorage.getItem('theme');
+    const systemPrefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = saved === 'dark' || (saved === null && systemPrefDark);
+
+    if (isDark) {
+      root.dataset.theme = 'dark';
+      slider.classList.add('active');
+    } else {
+      root.dataset.theme = 'light';
+    }
+
+    slider.addEventListener('click', () => {
+      const nextIsDark = slider.classList.toggle('active');
+      const nextTheme = nextIsDark ? 'dark' : 'light';
+      root.dataset.theme = nextTheme;
+      localStorage.setItem('theme', nextTheme);
+    });
+  </script>
 </body>
-<script>
-  const slider = document.getElementById('theme-switch');
-  const root   = document.documentElement;
-
-  const saved = localStorage.getItem('theme');
-  const systemPrefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const isDark = saved === 'dark' || (saved === null && systemPrefDark);
-
-  if (isDark) {
-    root.dataset.theme = 'dark';
-    slider.classList.add('active');
-  } else {
-    root.dataset.theme = 'light';
-  }
-
-  slider.addEventListener('click', () => {
-    const nextIsDark = slider.classList.toggle('active');
-    const nextTheme = nextIsDark ? 'dark' : 'light';
-    root.dataset.theme = nextTheme;
-    localStorage.setItem('theme', nextTheme);
-  });
-</script>
 </html>
