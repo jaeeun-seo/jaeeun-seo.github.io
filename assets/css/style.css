@@ -184,6 +184,10 @@ h1, h2 {
     color: var(--link-dark);
   }
 }
+.delimeter {
+  margin: 0 0.15rem;
+  color: var(--link);
+}
 
 .content .author {
   color: var(--fg);
