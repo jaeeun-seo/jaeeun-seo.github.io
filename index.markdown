@@ -3,7 +3,7 @@ layout: default
 ---
 
 <h1> About Me </h1>
-{{ site.description }}
+{{ site.mydescription }}
 
 
 Email: [{{ site.email }}](mailto:{{ site.email }})  
