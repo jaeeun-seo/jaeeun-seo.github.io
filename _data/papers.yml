@@ -2,6 +2,7 @@
   date: November 2024
   detail: Conditionally Accepted, <span class="semi-bold">Review of Economic Studies</span>
   paper: "https://jaeeun-seo.github.io/files/Seo_JMP.pdf"
+  online_appendix: "https://jaeeun-seo.github.io/files/Seo_JMP_OA.pdf"
   authors:
     - name: "Ryungha Oh"
       url: "https://sites.google.com/view/ryunghaoh"
@@ -26,7 +27,7 @@
   type: "WIP"
 
 
-- title: "Imperfect Screening and Unemployment in Frictional Labor Markets"
+- title: "Assortative Matching through Partially Directed Search"
   authors:
     - name: "Ryungha Oh"
       url: "https://sites.google.com/view/ryunghaoh" 

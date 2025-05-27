@@ -36,9 +36,12 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>.
       <span>
         {% if p.paper %}
           <a href="{{ p.paper }}" class="file" target="_blank">[paper]</a>
-        {% endif %}
-        {% if p.code %}
-          •&nbsp;<a href="{{ p.code }}" class="file" target="_blank">[code]</a>
+        {%- endif %}
+        {%- if p.code -%}
+          &nbsp;•&nbsp;<a href="{{ p.code }}" class="file" target="_blank">[code]</a>
+        {%- endif -%}
+        {%- if p.online_appendix -%}
+          &nbsp;•&nbsp;<a href="{{ p.online_appendix }}" class="file" target="_blank">[online appendix]</a>
         {% endif %}
       </span>
     </div>
