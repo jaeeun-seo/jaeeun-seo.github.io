@@ -1,6 +1,7 @@
 - title: "Sectoral Shocks and Labor Market Dynamics: A Sufficient Statistics Approach"
   date: November 2024
   detail: Conditionally Accepted, <span class="semi-bold">Review of Economic Studies</span>
+  abstract: "We develop a sufficient statistics approach to evaluate the impact of sectoral shocks on labor market dynamics and welfare. Within a broad class of dynamic discrete choice models that allows for arbitrary persistent worker heterogeneity, we show that knowledge of steady-state intersectoral gross worker flows over various time horizons is sufficient to evaluate labor supply responses to shocks and their welfare consequences. We also establish analytically that assuming away persistent worker heterogeneity—a common practice in the literature—leads to overestimation of steady-state worker flows, resulting in systematic biases in counterfactual predictions. As an illustration of our approach, we revisit the consequences of the rise of import competition from China. Using US panel data to measure steady-state worker flows, we conclude that labor reallocation from manufacturing to non-manufacturing is significantly slower, and the negative welfare effects on manufacturing workers are much more severe than those predicted by models without persistent worker heterogeneity."
   paper: "https://jaeeun-seo.github.io/files/Seo_JMP.pdf"
   online_appendix: "https://jaeeun-seo.github.io/files/Seo_JMP_OA.pdf"
   authors:
@@ -12,6 +13,7 @@
 - title: "What Causes Agglomeration of Services? Theory and Evidence from Seoul"
   detail: Awarded Best Student Paper Prize (2022) by the Urban Economics Association
   paper: "https://ryunghaoh.github.io/files/Services.pdf"
+  abstract: "Why are economic activities concentrated in space? What are the policy implications of this concentration? And how will it change in the future? We revisit these classic questions in the context of non-tradable services, such as restaurants and retail, in Seoul. To understand the spatial concentration, we first causally identify positive spillovers across services stores. We microfound these spillovers by incorporating the trip-chaining mechanism—whereby consumers make multiple purchases during their services travel—into a standard quantitative spatial model that determines the spatial distribution of services. When calibrated to an original survey on trip chaining, this mechanism explains one-third of the observed concentration. However, unlike standard agglomeration mechanisms, it does not lead to inefficiency nor it exacerbates welfare inequality. Finally, we show that spatial linkages of services consumption play a crucial role in shaping the impact of the rise of work-from-home and of delivery services on the distribution of services."
   authors:
     - name: "Ryungha Oh"
       url: "https://sites.google.com/view/ryunghaoh"  
@@ -20,6 +22,7 @@
 
 - title: "Persistent Noise, Feedback, and Endogenous Optimism: A Rational Theory of Overextrapolation"
   paper: "https://jaeeun-seo.github.io/files/Seo2023.pdf"
+  abstract: "I develop a noisy rational expectations model with persistent noise. Firms learn about economic conditions from signals, and the noise in the signals is persistent rather than <i>i.i.d.</i> over time. Firms rationally account for the persistence of noise and update their interpretations of signals based on ex post observations of true economic conditions. I show that this process gives rise to a novel mechanism by which optimism arises endogenously, which in turn amplifies or dampens the effects of underlying shocks. In particular, this model can generate the delayed overreaction in firms' expectations documented in the literature when firms are better informed about idiosyncratic shocks relative to aggregate shocks. Moreover, strategic complementarity between firms and the resulting higher-order optimism strengthen this mechanism further. Finally, I empirically distinguish my theory from behavioral theories by exploiting the difference in the degree of overextrapolation between consensus and individual forecasts."
   type: "WP"
 
 

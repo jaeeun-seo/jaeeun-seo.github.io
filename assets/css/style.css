@@ -22,7 +22,10 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable both-edges;
+}
 body {
   font-family: "Raleway", sans-serif;
   background: var(--bg);
@@ -175,7 +178,6 @@ h1, h2 {
   list-style: disc inside;
   margin-bottom: 1rem;
 }
-
 .content a {
   color: var(--link);
   text-decoration: none;
@@ -183,6 +185,58 @@ h1, h2 {
     text-decoration: underline;
     color: var(--link-dark);
   }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');	
+.abstract-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+  margin-top: 0.5rem;
+  font-size: var(--font-smaller);
+  p { text-align: justify; }
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 300;  
+}
+.abstract-content.open {
+  max-height: 400px;
+  opacity: 1;
+  .chevron-icon i {
+    transform: rotate(180deg);  
+  }
+}
+
+.abstract-toggle {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  color: var(--link);
+  &:hover {
+    color: var(--link-dark);
+    .chevron-icon i {
+      color: var(--link-dark);
+      transition: transform 0.3s ease;
+    }
+  }
+}
+
+.abstract-toggle .chevron-icon {
+  position: absolute;
+  font-size: 0.5rem;
+  right: 0.22rem;
+  top: 50%;
+  transform: translateY(-42%);
+  pointer-events: none;
+}
+.abstract-toggle.open .chevron-icon i {
+  transform: rotate(180deg);
+}
+
+.file {
+  color: var(--link);
+  text-decoration: none;
+  font-size: var(--font-small);
 }
 .delimeter {
   margin: 0 0.15rem;

@@ -73,5 +73,20 @@
       localStorage.setItem('theme', nextTheme);
     });
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.abstract-toggle').forEach(link => {
+        link.addEventListener('click', function () {
+          const container = this.closest('.WP, .WIP');
+          const abstractDiv = container.querySelector('.abstract-content');
+          const icon = this.querySelector('i');
+          const isOpen = abstractDiv.classList.contains('open');
+
+          abstractDiv.classList.toggle('open');
+          this.classList.toggle('open');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
