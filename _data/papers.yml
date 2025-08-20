@@ -6,7 +6,7 @@
   online_appendix: "https://jaeeun-seo.github.io/files/Seo_JMP_OA.pdf"
   authors:
     - name: "Ryungha Oh"
-      url: "https://sites.google.com/view/ryunghaoh"
+      url: "https://ryunghaoh.github.io/"
   type: "WP"
 
 
@@ -16,7 +16,7 @@
   abstract: "Why are economic activities concentrated in space? What are the policy implications of this concentration? And how will it change in the future? We revisit these classic questions in the context of non-tradable services, such as restaurants and retail, in Seoul. To understand the spatial concentration, we first causally identify positive spillovers across services stores. We microfound these spillovers by incorporating the trip-chaining mechanism—whereby consumers make multiple purchases during their services travel—into a standard quantitative spatial model that determines the spatial distribution of services. When calibrated to an original survey on trip chaining, this mechanism explains one-third of the observed concentration. However, unlike standard agglomeration mechanisms, it does not lead to inefficiency nor it exacerbates welfare inequality. Finally, we show that spatial linkages of services consumption play a crucial role in shaping the impact of the rise of work-from-home and of delivery services on the distribution of services."
   authors:
     - name: "Ryungha Oh"
-      url: "https://sites.google.com/view/ryunghaoh"  
+      url: "https://ryunghaoh.github.io/"  
   type: "WP"
 
 
@@ -33,5 +33,5 @@
 - title: "Assortative Matching through Partially Directed Search"
   authors:
     - name: "Ryungha Oh"
-      url: "https://sites.google.com/view/ryunghaoh" 
+      url: "https://ryunghaoh.github.io/" 
   type: "WIP"
