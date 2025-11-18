@@ -32,11 +32,16 @@
   type: "WP"
 
 
-- title: "Employment Dynamics and Sectoral Misallocation of Labor"
+- title: "The Intensive and Extensive Margins of the Decline in Manufacturing"
+  abstract: "We show that the decline of U.S. manufacturing is driven by the extensive margin: young workers disproportionately avoid entry into declining sectors, while incumbents exit through retirement. Using CPS microdata, we document that the labor supply elasticity with respect to wages is 7 times higher for new entrants than for incumbents. We develop a model that shows this high-elasticity entrant margin creates quantity amplification and wage attenuation in the labor market in response to sectoral shocks, and a smaller underlying shock is required to explain demand shocks than in models lacking this margin. A multi-region quantitative application of our framework replicates key empirical facts, including local-level recoveries driven by young workers entering service sectors. Our results suggest adjustment policies may be more effective when targeting the high-elasticity extensive margin of new entrants rather than the low-elasticity intensive margin of incumbents."
+  authors:
+    - name: "Bumsoo Kim"
+      url: "https://www.bumsoo-kim.com/" 
   type: "WIP"
 
 
 - title: "Assortative Matching through Partially Directed Search"
+  abstract: "In this paper, we develop a frictional search model with partially directed search, where heterogeneous workers and firms tend to search toward partners offering higher matching rates or greater surplus, though imperfectly because of idiosyncratic amenities. We first show that under production complementarity, positive assortative matching arises, and the degree of assortativeness increases in the directedness of search on both workers and firms. In addition, heterogeneity in matching rates depends crucially on the relative degree of search directedness: when firm (worker) search is more directed than worker (firm) search, job-finding rates increase (decrease) in worker productivity. Next, we calibrate the model using German administrative data and show that it successfully replicates both employment patterns and matching rates. Finally, we apply the framework to study how labor market dynamics have evolved over time. We find that both degree of assortativeness and the relative job-finding rates of low-productivity workers have increased. As production complementarities strengthen, the search of low-productivity workers has become increasingly concentrated toward low-productivity, and hence less competitive firms."
   authors:
     - name: "Ryungha Oh"
       url: "https://ryunghaoh.github.io/" 
