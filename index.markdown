@@ -27,7 +27,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
         </span>
-      {%- endif %}<br>
+      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
@@ -74,7 +74,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
         </span>
-      {%- endif %}<br>
+      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
@@ -121,7 +121,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
    	</span>
-      {%- endif %}<br>
+      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
@@ -134,7 +134,15 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
         {%- if p.code -%}
           <span class="delimeter">•</span><a href="{{ p.code }}" class="file" target="_blank">[code]</a>
         {%- endif -%}
+	{%- if p.abstract -%}
+	    <a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>]</a>
+	{% endif %}
       </span>
+      {% if p.abstract %}
+        <div class="abstract-content">
+          <p>{{ p.abstract }}</p>
+        </div>
+      {% endif %}
     </div>
   {% endfor %}
 </section>
