@@ -39,6 +39,7 @@
     - name: "Bumsoo Kim"
       url: "https://www.bumsoo-kim.com/" 
   type: "WIP"
+  oneline: true
 
 
 - title: "Assortative Matching through Partially Directed Search"
