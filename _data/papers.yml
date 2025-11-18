@@ -1,3 +1,9 @@
+- title: "Spatial Job Misallocation"
+  date: November 2025
+  abstract: "This paper studies the efficiency of job creation across space and job types. Because labor market dynamics differ systematically across locations and jobs, the magnitude of externalities associated with vacancy creation in a frictional labor market also varies, leading to misallocation in the spatial distribution and the composition of jobs. I quantify these inefficiencies using a frictional labor market model with multiple locations and ex ante job heterogeneity that is flexible enough to replicate observed heterogeneity in labor dynamics. Calibrating the model to match patterns of job-finding and job-to-job mobility in U.S. metropolitan areas, I find that a social planner would reallocate vacancy creation away from metropolitan areas with heated labor markets (by up to −27%) toward those with frozen ones (by up to 18%), and, in particular, from moderately productive jobs toward less productive ones. Aggregate welfare rises by about 1.1%, providing an efficiency-based rationale for place-based policies that support weaker labor markets."
+  paper: "https://jaeeun-seo.github.io/files/Seo2025.pdf"
+  type: "JMP"
+
 - title: "Sectoral Shocks and Labor Market Dynamics: A Sufficient Statistics Approach"
   date: November 2024
   detail: Conditionally Accepted, <span class="semi-bold">Review of Economic Studies</span>
@@ -7,7 +13,7 @@
   authors:
     - name: "Ryungha Oh"
       url: "https://ryunghaoh.github.io/"
-  type: "WP"
+  type: "JMP"
 
 
 - title: "What Causes Agglomeration of Services? Theory and Evidence from Seoul"
