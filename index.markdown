@@ -27,7 +27,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
         </span>
-      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
+      {%- endif %}{% if p.oneline %}&nbsp;{% else %}<br>{% endif %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
@@ -74,7 +74,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
         </span>
-      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
+      {%- endif %}{% if p.oneline %}&nbsp;{% else %}<br>{% endif %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
@@ -121,7 +121,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           {%- unless forloop.last %} and {% endunless -%}
         {%- endfor -%}
    	</span>
-      {%- endif %}{% unless p.oneline %}<br>{% endunless %}
+      {%- endif %}{% if p.oneline %}&nbsp;{% else %}<br>{% endif %}
       {% if p.detail %}
         <span class="detail">
           {{ p.detail }}
