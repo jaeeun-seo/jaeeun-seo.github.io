@@ -9,6 +9,7 @@ layout: default
 Email: [{{ site.email }}](mailto:{{ site.email }})  
 My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
 
+{% comment %}
 <!-- ───────────────────────── Job Market Papers ───────────────────────── -->
 <section>
   <h2>Job Market Papers</h2>
@@ -55,8 +56,9 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
     </div>
   {% endfor %}
 </section>
+{% endcomment %}
 
-<!-- ───────────────────────── Working Papers ───────────────────────── -->
+<!-- ───────────────────────── Research Papers ───────────────────────── -->
 <section>
   <h2>Working Papers</h2>
   {% assign working = site.data.papers | where: "type", "WP" %}
