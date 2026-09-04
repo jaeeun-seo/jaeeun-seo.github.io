@@ -58,9 +58,9 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
 </section>
 {% endcomment %}
 
-<!-- ───────────────────────── Research Papers ───────────────────────── -->
+<!-- ───────────────────────── Working Papers ───────────────────────── -->
 <section>
-  <h2>Working Papers</h2>
+  <h2>Research Papers</h2>
   {% assign working = site.data.papers | where: "type", "WP" %}
   {% for p in working %}
     <div class="WP">
