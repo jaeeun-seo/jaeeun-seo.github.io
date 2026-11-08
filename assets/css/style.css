@@ -285,6 +285,10 @@ h1, h2 {
   .sidebar-footer { 
     display: none;
   }
+  /* Narrow screens wrap abstracts onto more lines; 400px would cut them off. */
+  .abstract-content.open {
+    max-height: 700px;
+  }
 }
 @media (max-width: 400px) {
   .container {
