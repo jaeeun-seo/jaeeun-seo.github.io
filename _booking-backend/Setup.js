@@ -26,6 +26,28 @@ function setup() {
   });
 }
 
+/**
+ * Deletes EVERY booking (e.g. test bookings before going live): removes the
+ * calendar events of bookings that are still confirmed, then clears the
+ * Bookings sheet (header kept). No emails are sent. Run from the editor.
+ * Each deleted booking is listed in the execution log first.
+ */
+function clearAllBookings() {
+  requireOwner_();
+  withLock_(function () {
+    const rows = getBookings_();
+    rows.forEach(function (b) {
+      console.log([shortDate_(b.start) + ' ' + fmtTime_(b.start), b.status, b.name || '-', b.email].join(' | '));
+      if (b.status === 'confirmed') deleteBookingEvents_(b);
+    });
+    const sh = sheet_('Bookings');
+    const last = sh.getLastRow();
+    if (last >= 2) sh.getRange(2, 1, last - 1, sh.getLastColumn()).clearContent();
+    cache_().remove(RECENT_KEY);
+    console.log('삭제한 예약: ' + rows.length + '건');
+  });
+}
+
 function initSheet_(ss, name, cols) {
   const sh = ss.insertSheet(name);
   sh.getRange(1, 1, sh.getMaxRows(), cols.length).setNumberFormat('@');
