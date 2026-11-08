@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- Booking pages are private: keep them out of search engines. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>{{ page.title | default: "Meeting" }} · {{ site.title }}</title>
+  <script>
+    // Theme first (no flash), then start the API request right away, before any CSS loads.
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+      var dark = saved === 'dark' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+
+      var api = window.BOOKING_API = {{ site.data.booking.api | jsonify }};
+      var q = new URLSearchParams(location.search), url = null;
+      if (q.get('t')) url = api + '?action=booking&t=' + encodeURIComponent(q.get('t'));
+      else if (q.get('m')) url = api + '?action=init&m=' + encodeURIComponent(q.get('m'));
+      if (url && window.fetch) {
+        window.BK_BOOT = fetch(url).then(function (r) { return r.text(); }, function () { return null; });
+      }
+    })();
+  </script>
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/booking/icon-book.svg' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/booking/icon-book-32.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/booking/icon-book.png' | relative_url }}">
+
+  <!-- The booking API lives on Google Apps Script: open those connections early. -->
+  <link rel="preconnect" href="https://script.google.com">
+  <link rel="preconnect" href="https://script.googleusercontent.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:400,600,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/booking/booking.css' | relative_url }}">
+</head>
+<body>
+  <main class="bk-page">
+    {{ content }}
+  </main>
+</body>
+</html>

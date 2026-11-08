@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<base target="_blank">
+<meta charset="utf-8">
+<style>
+  :root { --fg:#1f2328; --muted:#656d76; --line:#d8dee4; --bg:#fff; --soft:#f6f8fa; --accent:#039827; --danger:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif; color:var(--fg); background:var(--soft); font-size:14px; line-height:1.5; }
+  header { background:var(--bg); border-bottom:1px solid var(--line); padding:0 24px; display:flex; align-items:center; gap:24px; position:sticky; top:0; z-index:5; }
+  header h1 { font-size:16px; margin:0; padding:14px 0; }
+  nav button { background:none; border:none; padding:16px 4px; margin-right:14px; font:inherit; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; }
+  nav button.on { color:var(--fg); font-weight:600; border-color:var(--accent); }
+  main { max-width:980px; margin:24px auto; padding:0 20px 120px; }
+  .card { background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:16px; }
+  .card h2 { font-size:15px; margin:0 0 14px; }
+  .muted { color:var(--muted); }
+  .small { font-size:12px; }
+  .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .grow { flex:1; }
+  button.btn, a.btn { display:inline-flex; align-items:center; gap:6px; padding:7px 14px; border-radius:7px; border:1px solid var(--line); background:var(--bg); font:inherit; cursor:pointer; color:var(--fg); text-decoration:none; white-space:nowrap; }
+  .btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+  .btn.danger { color:var(--danger); }
+  .btn.danger.armed { background:var(--danger); color:#fff; border-color:var(--danger); }
+  .btn.tiny { padding:3px 9px; font-size:12px; }
+  .btn:disabled { opacity:.5; cursor:default; }
+  input[type=text], input[type=number], input[type=date], input[type=time], input[type=email], select, textarea {
+    font:inherit; padding:7px 9px; border:1px solid var(--line); border-radius:7px; background:var(--bg); color:var(--fg);
+  }
+  textarea { width:100%; resize:vertical; }
+  input.full { width:100%; }
+  input[type=number] { width:80px; }
+  label.f { display:block; margin-bottom:14px; }
+  label.f > span { display:block; font-weight:600; margin-bottom:4px; }
+  label.f > small { display:block; color:var(--muted); margin:-2px 0 4px; }
+  .meeting { display:flex; gap:16px; align-items:center; }
+  .bar { width:6px; align-self:stretch; border-radius:3px; background:#8e24aa; }
+  .meeting h3 { margin:0 0 2px; font-size:15px; }
+  .badge { display:inline-block; font-size:11px; padding:1px 8px; border-radius:99px; background:var(--soft); border:1px solid var(--line); color:var(--muted); margin-left:6px; vertical-align:middle; }
+  .badge.paused { background:#fff4e5; border-color:#f5c27a; color:#a15c00; }
+  .badge.ok { background:#e8f5e9; border-color:#a5d6a7; color:#1b5e20; }
+  .badge.cancel { background:#fdecea; border-color:#f5b7b1; color:var(--danger); }
+  .link { width:330px; font-size:12px; color:var(--muted); }
+  .chips button { padding:6px 12px; border:1px solid var(--line); background:var(--bg); border-radius:99px; cursor:pointer; font:inherit; }
+  .chips button.on { background:var(--fg); color:#fff; border-color:var(--fg); }
+  .swatch { width:26px; height:26px; border-radius:50%; border:2px solid transparent; cursor:pointer; padding:0; }
+  .swatch.on { outline:2px solid var(--fg); outline-offset:2px; }
+  .swatch.none { background:repeating-linear-gradient(45deg,#eee,#eee 4px,#fff 4px,#fff 8px); border-color:var(--line); }
+  .day { display:flex; gap:18px; padding:12px 0; border-bottom:1px solid var(--soft); align-items:flex-start; }
+  .day .dname { width:96px; padding-top:9px; font-weight:600; display:flex; gap:8px; align-items:center; cursor:pointer; }
+  .day .dname input { width:18px; height:18px; accent-color:var(--fg); }
+  .day .dcol { width:160px; }
+  .unavail { display:inline-block; padding-top:9px; }
+  .wins { display:flex; flex-direction:column; gap:8px; }
+  .win { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .tablewrap { overflow-x:auto; }
+  @media (max-width:600px) { .meeting { flex-wrap:wrap; } main { padding:0 10px 120px; } .link { width:100%; } .day { flex-wrap:wrap; } .grid2 { grid-template-columns:1fr; } header { gap:10px; padding:0 12px; } }
+  input.tm { width:84px; text-align:center; font-size:15px; padding:9px 6px; font-variant-numeric:tabular-nums; }
+  input.tm.bad { border-color:var(--danger); background:#fdf3f2; }
+  .dash { color:var(--muted); }
+  .icon { background:none; border:none; cursor:pointer; color:var(--fg); padding:6px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; font:inherit; }
+  .icon:hover { background:var(--soft); }
+  .icon.plus { font-size:22px; line-height:1; width:34px; height:34px; margin-left:auto; }
+  .x { background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; padding:0 6px; }
+  .x:hover { color:var(--danger); }
+  .addlink { background:none; border:none; color:var(--accent); cursor:pointer; font:inherit; padding:4px 0; font-weight:600; }
+  .seg { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .seg button { border:none; background:var(--bg); padding:7px 14px; font:inherit; cursor:pointer; border-right:1px solid var(--line); }
+  .seg button:last-child { border-right:none; }
+  .seg button.on { background:var(--fg); color:#fff; }
+  .q { border:1px solid var(--line); border-radius:8px; padding:12px; margin-bottom:10px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; }
+  .tpl { border-top:1px solid var(--soft); padding-top:12px; margin-top:12px; }
+  .tpl h4 { margin:0 0 6px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .vars { background:var(--soft); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--muted); }
+  .vars code { background:var(--bg); border:1px solid var(--line); border-radius:4px; padding:0 4px; margin:2px; display:inline-block; color:var(--fg); }
+  .savebar { position:fixed; left:0; right:0; bottom:0; background:var(--bg); border-top:1px solid var(--line); padding:12px 24px; display:flex; justify-content:flex-end; gap:10px; align-items:center; z-index:5; }
+  .err { color:var(--danger); margin-right:auto; }
+  .toast { position:fixed; top:64px; left:50%; transform:translateX(-50%); background:var(--fg); color:#fff; padding:8px 16px; border-radius:8px; z-index:9; }
+  table { width:100%; border-collapse:collapse; background:var(--bg); }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { font-size:12px; color:var(--muted); font-weight:600; background:var(--soft); }
+  tr.cancelled td { color:var(--muted); text-decoration:line-through; }
+  tr.cancelled td.st { text-decoration:none; }
+  .loading { text-align:center; padding:60px; color:var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <h1>미팅 예약 관리</h1>
+  <nav id="nav">
+    <button data-tab="meetings" class="on">미팅</button>
+    <button data-tab="bookings">예약 목록</button>
+    <button data-tab="settings">설정</button>
+  </nav>
+</header>
+<main id="app"><div class="loading">불러오는 중…</div></main>
+<div id="savebar"></div>
+
+<script>
+(function () {
+  'use strict';
+  var COLORS = [
+    ['', '캘린더 기본색', ''], ['1', '라벤더', '#7986cb'], ['2', '세이지', '#33b679'], ['3', '포도', '#8e24aa'],
+    ['4', '플라밍고', '#e67c73'], ['5', '바나나', '#f6bf26'], ['6', '귤', '#f4511e'], ['7', '공작', '#039be5'],
+    ['8', '흑연', '#616161'], ['9', '블루베리', '#3f51b5'], ['10', '바질', '#0b8043'], ['11', '토마토', '#d50000']
+  ];
+  var DAYS = [['mon', '월요일'], ['tue', '화요일'], ['wed', '수요일'], ['thu', '목요일'], ['fri', '금요일'], ['sat', '토요일'], ['sun', '일요일']];
+  var DURATIONS = [10, 15, 20, 30, 45, 60, 90];
+  var TPL_GROUPS = [
+    ['캘린더 일정', [
+      ['event', '내 캘린더 일정', 'eventTitle', 'eventDescription'],
+      ['studentEvent', '학생 캘린더 일정', 'studentEventTitle', 'studentEventDescription']
+    ]],
+    ['학생에게 가는 메일', [
+      ['confirm', '예약 확정'], ['reschedule', '일정 변경 (학생이 변경)'], ['reminder', '리마인더'], ['cancel', '취소 (학생이 취소)']
+    ]],
+    ['나에게 오는 메일', [
+      ['ownerNew', '새 예약'], ['ownerReschedule', '학생이 일정 변경'], ['ownerCancel', '학생이 취소']
+    ]]
+  ];
+  var VARS = [
+    ['name', '학생 이름'], ['email', '학생 이메일'], ['meeting', '미팅 이름'], ['host', '내 이름'],
+    ['date', '2026년 11월 12일 (목)'], ['shortDate', '11월 12일 (목)'], ['time', '14:00-14:30'], ['start', '14:00'], ['end', '14:30'],
+    ['duration', '30분'], ['location', '장소'], ['answers', '질문 답변 전체'], ['manageLink', '학생용 변경·취소 링크'],
+    ['calendarLink', '구글 캘린더에 추가 링크'], ['bookLink', '예약 페이지 링크'], ['cancelReason', '취소 사유'], ['previous', '변경 전 일시 (변경 메일)']
+  ];
+
+  var app = document.getElementById('app');
+  var savebar = document.getElementById('savebar');
+  var S = { tab: 'meetings', data: null, bookings: null, draft: null, saving: false, error: '', armed: null,
+    bf: { when: 'upcoming', meeting: '', cancelled: false } };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function call(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return new Promise(function (resolve, reject) {
+      var r = google.script.run.withSuccessHandler(resolve).withFailureHandler(function (e) {
+        reject(new Error((e && e.message || String(e)).replace(/^Error:\s*/, '')));
+      });
+      r[fn].apply(r, args);
+    });
+  }
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 2200);
+  }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function linkOf(m) { return S.data.bookUrl + '?m=' + m.id; }
+  function colorHex(id) { for (var i = 0; i < COLORS.length; i++) if (COLORS[i][0] === String(id || '')) return COLORS[i][2] || '#8e24aa'; return '#8e24aa'; }
+  function todayStr() { return new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' }).format(new Date()); }
+
+  /* ================= meetings list ================= */
+
+  function meetingSummary(m) {
+    var bits = [m.duration + '분'];
+    if (m.location) bits.push(m.location);
+    if (m.mode === 'dates') {
+      bits.push('지정 날짜 ' + Object.keys(m.dates || {}).length + '일');
+    } else {
+      var names = DAYS.filter(function (d) { return (m.weekly || {})[d[0]]; }).map(function (d) { return d[1].charAt(0); });
+      bits.push('매주 ' + (names.join('·') || '(요일 없음)'));
+    }
+    return bits.join(' · ');
+  }
+
+  function renderMeetings() {
+    var list = S.data.meetings;
+    var html = '<div class="row" style="margin-bottom:16px"><div class="grow muted">미팅마다 고유 링크가 있습니다. 링크를 아는 사람만 예약할 수 있어요.</div>' +
+      '<button class="btn primary" data-a="new">+ 새 미팅</button></div>';
+    if (!list.length) html += '<div class="card muted">아직 미팅이 없습니다.</div>';
+    list.forEach(function (m) {
+      var armed = S.armed === m.id;
+      html += '<div class="card meeting">' +
+        '<div class="bar" style="background:' + colorHex(m.color) + '"></div>' +
+        '<div class="grow"><h3>' + esc(m.name) + (m.paused ? '<span class="badge paused">일시정지</span>' : '') + '</h3>' +
+        '<div class="muted small">' + esc(meetingSummary(m)) + '</div>' +
+        '<div class="row" style="margin-top:8px"><input class="link" type="text" readonly value="' + esc(linkOf(m)) + '">' +
+        '<button class="btn tiny" data-a="copy" data-id="' + esc(m.id) + '">링크 복사</button>' +
+        '<a class="btn tiny" href="' + esc(linkOf(m)) + '">열기</a></div></div>' +
+        '<div class="row">' +
+        '<button class="btn" data-a="edit" data-id="' + esc(m.id) + '">수정</button>' +
+        '<button class="btn" data-a="dup" data-id="' + esc(m.id) + '">복제</button>' +
+        '<button class="btn" data-a="pause" data-id="' + esc(m.id) + '">' + (m.paused ? '재개' : '일시정지') + '</button>' +
+        '<button class="btn danger' + (armed ? ' armed' : '') + '" data-a="del" data-id="' + esc(m.id) + '">' + (armed ? '정말 삭제' : '삭제') + '</button>' +
+        '</div></div>';
+    });
+    app.innerHTML = html;
+    savebar.innerHTML = '';
+  }
+
+  function findMeeting(id) { return S.data.meetings.filter(function (m) { return m.id === id; })[0]; }
+
+  /* ================= meeting editor ================= */
+
+  function newMeeting() {
+    return {
+      id: '', name: '', description: '', duration: 30, location: '', color: '',
+      mode: 'recurring', weekly: {}, overrides: {}, dates: {}, startDate: '', endDate: '', rangeDays: 60,
+      minNoticeHours: 12, bufferBefore: 0, bufferAfter: 0, reminderHours: 0,
+      addToStudentCalendar: true, paused: false,
+      questions: [{ key: 'name', label: '이름', type: 'text', required: true, help: '' }],
+      confirmationMessage: '', templates: {}
+    };
+  }
+
+  function openEditor(m) {
+    var d = clone(m);
+    var t = clone(S.data.defaults);
+    Object.keys(d.templates || {}).forEach(function (k) { t[k] = d.templates[k]; });
+    d.templates = t;
+    d._overrides = Object.keys(d.overrides || {}).sort().map(function (k) { return { date: k, windows: d.overrides[k] }; });
+    d._dates = Object.keys(d.dates || {}).sort().map(function (k) { return { date: k, windows: d.dates[k] }; });
+    S.draft = d; S.error = ''; S.tab = 'edit';
+    S.snapshot = JSON.stringify(d);
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  var TRASH = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
+
+  /** Accepts "9", "930", "0930", "9:30", "14.30", "14시30" ... -> "09:30"; null if invalid. */
+  function normTime(v) {
+    var s = String(v || '').trim().replace(/[.시h]/gi, ':').replace(/분|\s/g, '').replace(/:$/, '');
+    var h, m;
+    if (/^\d{1,2}$/.test(s)) { h = +s; m = 0; }
+    else if (/^\d{3,4}$/.test(s)) { h = +s.slice(0, -2); m = +s.slice(-2); }
+    else if (/^\d{1,2}:\d{1,2}$/.test(s)) { h = +s.split(':')[0]; m = +s.split(':')[1]; }
+    else return null;
+    if (h > 23 || m > 59) return null;
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  function timeInput(path, i, pos, val) {
+    return '<input type="text" class="tm' + (normTime(val) ? '' : ' bad') + '" inputmode="numeric" maxlength="5" placeholder="09:00" ' +
+      'data-w="' + path + '|' + i + '|' + pos + '" value="' + esc(val) + '">';
+  }
+
+  /** Time-range rows; the "+" sits to the right of the first row. */
+  function winsHtml(path, wins) {
+    if (!wins.length) return '<button class="addlink" data-a="win-add" data-p="' + path + '">+ 시간대 추가</button>';
+    var h = '<div class="wins">';
+    wins.forEach(function (w, i) {
+      h += '<div class="win">' + timeInput(path, i, 0, w[0]) + '<span class="dash">-</span>' + timeInput(path, i, 1, w[1]) +
+        '<button class="icon" title="삭제" data-a="win-del" data-p="' + path + '|' + i + '">' + TRASH + '</button>' +
+        (i === 0 ? '<button class="icon plus" title="시간대 추가" data-a="win-add" data-p="' + path + '">+</button>' : '') + '</div>';
+    });
+    return h + '</div>';
+  }
+
+  function dateRows(kind, rows, allowOff) {
+    var h = '';
+    rows.forEach(function (r, i) {
+      var off = allowOff && r.windows.length === 0;
+      h += '<div class="day"><div class="dcol"><input type="date" data-dd="' + kind + '|' + i + '" value="' + esc(r.date) + '">' +
+        (allowOff ? '<label class="row small" style="margin-top:6px"><input type="checkbox" data-off="' + i + '"' + (off ? ' checked' : '') + '> 휴무</label>' : '') +
+        '</div><div class="grow">' + (off ? '<span class="muted unavail">예약 불가</span>' : winsHtml(kind + '|' + i, r.windows)) + '</div>' +
+        '<button class="icon" title="날짜 삭제" data-a="date-del" data-p="' + kind + '|' + i + '">' + TRASH + '</button></div>';
+    });
+    return h;
+  }
+
+  function tplBlock(id, title, subjKey, bodyKey) {
+    subjKey = subjKey || id + 'Subject';
+    bodyKey = bodyKey || id + 'Body';
+    var isEvent = subjKey.indexOf('Title') > -1;
+    var t = S.draft.templates;
+    var extra = '';
+    if (id === 'studentEvent') {
+      extra = '<label class="row small" style="margin-bottom:8px"><input type="checkbox" data-f="addToStudentCalendar" data-type="bool"' +
+        (S.draft.addToStudentCalendar !== false ? ' checked' : '') + '> 학생 구글 캘린더에 자동으로 추가 (초대 메일 없음)</label>';
+    }
+    return '<div class="tpl"><h4>' + title + ' <button class="btn tiny" data-a="tpl-reset" data-k="' + subjKey + ',' + bodyKey + '">기본값으로</button></h4>' + extra +
+      '<label class="f"><span class="small muted">' + (isEvent ? '제목' : '메일 제목') + '</span><input type="text" class="full" data-t="' + subjKey + '" value="' + esc(t[subjKey]) + '"></label>' +
+      '<label class="f"><span class="small muted">' + (isEvent ? '설명' : '본문 (비우면 빈 메일)') + '</span><textarea rows="' + (isEvent ? 3 : 6) + '" data-t="' + bodyKey + '">' + esc(t[bodyKey]) + '</textarea></label></div>';
+  }
+
+  function renderEditor() {
+    var d = S.draft;
+    var h = '<div class="row" style="margin-bottom:16px"><button class="btn" data-a="back">← 목록</button><h2 class="grow" style="margin:0;font-size:17px">' +
+      (d.id ? '미팅 수정' : '새 미팅') + '</h2></div>';
+
+    // basics
+    h += '<div class="card"><h2>기본 정보</h2>' +
+      '<label class="f"><span>미팅 이름 *</span><input type="text" class="full" data-f="name" value="' + esc(d.name) + '"></label>' +
+      '<div class="f" style="margin-bottom:14px"><span style="display:block;font-weight:600;margin-bottom:4px">길이</span><div class="row chips">' +
+      DURATIONS.map(function (n) { return '<button data-a="dur" data-n="' + n + '" class="' + (Number(d.duration) === n ? 'on' : '') + '">' + n + '분</button>'; }).join('') +
+      '<span class="muted small">직접 입력</span><input type="number" min="5" max="480" data-f="duration" data-type="num" value="' + esc(d.duration) + '"> 분</div></div>' +
+      '<label class="f"><span>장소</span><input type="text" class="full" data-f="location" value="' + esc(d.location) + '"></label>' +
+      '<div style="margin-bottom:14px"><span style="display:block;font-weight:600;margin-bottom:6px">내 캘린더 일정 색상</span><div class="row">' +
+      COLORS.map(function (c) {
+        return '<button class="swatch' + (c[0] ? '' : ' none') + (String(d.color || '') === c[0] ? ' on' : '') + '" title="' + c[1] + '" data-a="color" data-c="' + c[0] + '" style="' + (c[2] ? 'background:' + c[2] : '') + '"></button>';
+      }).join('') + '</div></div>' +
+      '<label class="f"><span>예약 페이지 안내 문구</span><small>한 줄에 하나씩. 예약 페이지 왼쪽에 목록으로 보입니다.</small><textarea rows="3" data-f="description">' + esc(d.description) + '</textarea></label>' +
+      '<label class="f"><span>예약 완료 후 안내 문구</span><small>예약이 끝난 화면에 보입니다. 비워도 됩니다.</small><textarea rows="2" data-f="confirmationMessage">' + esc(d.confirmationMessage) + '</textarea></label>' +
+      '</div>';
+
+    // availability
+    h += '<div class="card"><h2>예약 가능 시간</h2><div class="seg" style="margin-bottom:14px">' +
+      '<button data-a="mode" data-v="recurring" class="' + (d.mode !== 'dates' ? 'on' : '') + '">매주 반복</button>' +
+      '<button data-a="mode" data-v="dates" class="' + (d.mode === 'dates' ? 'on' : '') + '">특정 날짜만</button></div>';
+    if (d.mode !== 'dates') {
+      DAYS.forEach(function (day) {
+        var wins = (d.weekly || {})[day[0]] || [];
+        h += '<div class="day"><label class="dname"><input type="checkbox" data-dayon="' + day[0] + '"' + (wins.length ? ' checked' : '') + '> ' + day[1] + '</label>' +
+          '<div class="grow">' + (wins.length ? winsHtml('weekly|' + day[0], wins) : '<span class="muted unavail">예약 불가</span>') + '</div></div>';
+      });
+      h += '<div class="row" style="margin-top:16px"><span style="font-weight:600">운영 기간</span><input type="date" data-f="startDate" value="' + esc(d.startDate) + '"> ~ ' +
+        '<input type="date" data-f="endDate" value="' + esc(d.endDate) + '"><span class="muted small">비우면 제한 없음</span></div>' +
+        '<div class="row" style="margin-top:10px"><span style="font-weight:600">공개 범위</span> 오늘부터 <input type="number" min="1" max="365" data-f="rangeDays" data-type="num" value="' + esc(d.rangeDays) + '"> 일 앞까지 표시</div>' +
+        '<h2 style="margin-top:22px">날짜별 예외</h2><div class="muted small" style="margin-bottom:6px">특정 날짜만 시간을 바꾸거나 휴무로 지정합니다.</div>' +
+        dateRows('ov', d._overrides, true) +
+        '<button class="addlink" data-a="date-add" data-k="ov">+ 예외 날짜 추가</button>';
+    } else {
+      h += '<div class="muted small" style="margin-bottom:6px">지정한 날짜와 시간에만 예약을 받습니다.</div>' + dateRows('dt', d._dates, false) +
+        '<button class="addlink" data-a="date-add" data-k="dt">+ 날짜 추가</button>';
+    }
+    h += '</div>';
+
+    // rules
+    h += '<div class="card"><h2>예약 규칙</h2><div class="grid2">' +
+      '<label class="f"><span>최소 예약 마감</span>미팅 <input type="number" min="0" data-f="minNoticeHours" data-type="num" value="' + esc(d.minNoticeHours) + '"> 시간 전까지</label>' +
+      '<label class="f"><span>리마인더 메일</span>미팅 <input type="number" min="0" data-f="reminderHours" data-type="num" value="' + esc(d.reminderHours) + '"> 시간 전 <small>0이면 보내지 않음</small></label>' +
+      '<label class="f"><span>앞 버퍼</span>미팅 전 <input type="number" min="0" data-f="bufferBefore" data-type="num" value="' + esc(d.bufferBefore) + '"> 분 비우기</label>' +
+      '<label class="f"><span>뒤 버퍼</span>미팅 후 <input type="number" min="0" data-f="bufferAfter" data-type="num" value="' + esc(d.bufferAfter) + '"> 분 비우기</label>' +
+      '</div></div>';
+
+    // questions
+    h += '<div class="card"><h2>학생 입력 항목</h2><div class="q muted">이메일 (필수, 항상 포함)</div>';
+    d.questions.forEach(function (q, i) {
+      h += '<div class="q"><div class="grid2">' +
+        '<label class="f"><span class="small">질문</span><input type="text" class="full" data-q="' + i + '|label" value="' + esc(q.label) + '"></label>' +
+        '<label class="f"><span class="small">변수명 (메일에서 {' + esc(q.key || '변수명') + '})</span><input type="text" class="full" data-q="' + i + '|key" value="' + esc(q.key) + '"' + (q.key === 'name' ? ' readonly' : '') + '></label>' +
+        '<label class="f" style="grid-column:1/3"><span class="small">도움말 (입력란 위에 작게 표시)</span><input type="text" class="full" data-q="' + i + '|help" value="' + esc(q.help) + '"></label></div>' +
+        '<div class="row"><select data-q="' + i + '|type"><option value="text"' + (q.type !== 'textarea' ? ' selected' : '') + '>한 줄</option><option value="textarea"' + (q.type === 'textarea' ? ' selected' : '') + '>여러 줄</option></select>' +
+        '<label class="row small"><input type="checkbox" data-q="' + i + '|required"' + (q.required ? ' checked' : '') + '> 필수</label><span class="grow"></span>' +
+        '<button class="btn tiny danger" data-a="q-del" data-i="' + i + '">삭제</button></div></div>';
+    });
+    h += '<button class="addlink" data-a="q-add">+ 질문 추가</button>' +
+      (d.questions.some(function (q) { return q.key === 'name'; }) ? '' : ' <button class="addlink" data-a="q-name">+ 이름 질문 추가</button>') +
+      '</div>';
+
+    // templates
+    var qVars = d.questions.filter(function (q) { return q.key && q.key !== 'name'; })
+      .map(function (q) { return '<code>{' + esc(q.key) + '}</code> ' + esc(q.label); }).join(' · ');
+    h += '<div class="card"><h2>캘린더 일정 · 메일 문구</h2><div class="vars">사용 가능한 변수: ' +
+      VARS.map(function (v) { return '<code>{' + v[0] + '}</code> ' + v[1]; }).join(' · ') + (qVars ? ' · ' + qVars : '') + '</div>';
+    TPL_GROUPS.forEach(function (g) {
+      h += '<h2 style="margin-top:22px">' + g[0] + '</h2>';
+      g[1].forEach(function (t) { h += tplBlock(t[0], t[1], t[2], t[3]); });
+    });
+    h += '</div>';
+
+    app.innerHTML = h;
+    savebar.innerHTML = '<div class="savebar"><span class="err">' + esc(S.error) + '</span>' +
+      '<button class="btn" data-a="back">취소</button>' +
+      '<button class="btn primary" data-a="save"' + (S.saving ? ' disabled' : '') + '>' + (S.saving ? '저장 중…' : '저장') + '</button></div>';
+  }
+
+  function winList(path) {
+    var p = path.split('|'), d = S.draft;
+    if (p[0] === 'weekly') { d.weekly = d.weekly || {}; d.weekly[p[1]] = d.weekly[p[1]] || []; return d.weekly[p[1]]; }
+    return (p[0] === 'ov' ? d._overrides : d._dates)[Number(p[1])].windows;
+  }
+
+  function isDirty() { return S.draft && JSON.stringify(S.draft) !== S.snapshot; }
+  function confirmLeave() {
+    return !isDirty() || confirm('저장하지 않은 변경 내용이 있습니다. 저장하지 않고 나갈까요?');
+  }
+
+  function lastEnd(wins) { return wins.length ? wins[wins.length - 1][1] : null; }
+  function plusHour(t) {
+    var mins = Math.min(23 * 60 + 59, Number(t.slice(0, 2)) * 60 + Number(t.slice(3)) + 60);
+    var h = Math.floor(mins / 60), m = mins % 60;
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+
+  /** Returns an error message, or '' when the draft looks valid. */
+  function validateDraft(d) {
+    var nums = [['duration', '길이', 5, 480], ['minNoticeHours', '최소 예약 마감', 0, 1440], ['reminderHours', '리마인더', 0, 336],
+      ['bufferBefore', '앞 버퍼', 0, 240], ['bufferAfter', '뒤 버퍼', 0, 240], ['rangeDays', '공개 범위', 1, 365]];
+    for (var i = 0; i < nums.length; i++) {
+      var v = String(d[nums[i][0]] == null ? '' : d[nums[i][0]]).trim();
+      if (!/^\d+$/.test(v)) return nums[i][1] + ' 값을 숫자로 입력해 주세요.';
+      if (+v < nums[i][2] || +v > nums[i][3]) return nums[i][1] + ' 값은 ' + nums[i][2] + '~' + nums[i][3] + ' 사이여야 합니다.';
+    }
+    var problem = '';
+    var check = function (where, wins) {
+      if (problem) return;
+      var list = wins.map(function (w) { return [normTime(w[0]), normTime(w[1]), w]; });
+      list.forEach(function (x) {
+        if (problem) return;
+        if (!x[0] || !x[1]) problem = where + ': 시간 형식을 확인해 주세요. 예: 09:30 (' + x[2].join('-') + ')';
+        else if (x[0] >= x[1]) problem = where + ': 끝나는 시간이 시작 시간보다 늦어야 합니다. (' + x[0] + '-' + x[1] + ')';
+      });
+      if (problem) return;
+      list.sort(function (a, b) { return a[0] < b[0] ? -1 : 1; });
+      for (var k = 1; k < list.length; k++) {
+        if (list[k][0] < list[k - 1][1]) { problem = where + ': 시간대가 겹칩니다.'; return; }
+      }
+    };
+    var checkRows = function (label, rows) {
+      var seen = {};
+      rows.forEach(function (r) {
+        if (problem) return;
+        if (!r.date) { problem = label + ': 날짜를 선택하지 않은 줄이 있습니다.'; return; }
+        if (seen[r.date]) { problem = label + ': 같은 날짜가 두 번 들어 있습니다 (' + r.date + ')'; return; }
+        seen[r.date] = true;
+        check(label + ' ' + r.date, r.windows);
+      });
+    };
+    DAYS.forEach(function (day) { check('[매주 반복] ' + day[1], (d.weekly || {})[day[0]] || []); });
+    checkRows('[매주 반복] 날짜별 예외', d._overrides);
+    checkRows('[특정 날짜만]', d._dates);
+    return problem;
+  }
+
+  function collectDraft() {
+    var d = clone(S.draft);
+    // Untouched template fields mean "use the default" - never freeze the default
+    // text this page happened to load (it may be outdated by the time we save).
+    Object.keys(d.templates || {}).forEach(function (k) {
+      if (d.templates[k] === S.data.defaults[k]) delete d.templates[k];
+    });
+    var tidy = function (wins) { return wins.map(function (w) { return [normTime(w[0]) || w[0], normTime(w[1]) || w[1]]; }); };
+    Object.keys(d.weekly || {}).forEach(function (k) { d.weekly[k] = tidy(d.weekly[k]); });
+    d._overrides.forEach(function (r) { r.windows = tidy(r.windows); });
+    d._dates.forEach(function (r) { r.windows = tidy(r.windows); });
+    d.overrides = {}; d.dates = {};
+    d._overrides.forEach(function (r) { if (r.date) d.overrides[r.date] = r.windows; });
+    d._dates.forEach(function (r) { if (r.date) d.dates[r.date] = r.windows; });
+    delete d._overrides; delete d._dates;
+    Object.keys(d.weekly || {}).forEach(function (k) { if (!d.weekly[k].length) delete d.weekly[k]; });
+    return d;
+  }
+
+  /* ================= bookings ================= */
+
+  function renderBookings() {
+    if (!S.bookings) {
+      app.innerHTML = '<div class="loading">불러오는 중…</div>';
+      call('adminBookings').then(function (b) { S.bookings = b; if (S.tab === 'bookings') render(); },
+        function (e) { if (S.tab === 'bookings') app.innerHTML = '<div class="card err">' + esc(e.message) + '</div>'; });
+      return;
+    }
+    var f = S.bf, now = new Date().toISOString();
+    var rows = S.bookings.filter(function (b) {
+      if (!f.cancelled && b.status !== 'confirmed') return false;
+      if (f.meeting && b.meetingId !== f.meeting) return false;
+      if (f.when === 'upcoming') return b.end >= now;
+      if (f.when === 'past') return b.end < now;
+      return true;
+    });
+    if (f.when === 'past') rows = rows.slice().reverse();
+    var opts = '<option value="">모든 미팅</option>' + S.data.meetings.map(function (m) {
+      return '<option value="' + esc(m.id) + '"' + (f.meeting === m.id ? ' selected' : '') + '>' + esc(m.name) + '</option>';
+    }).join('');
+    var h = '<div class="row" style="margin-bottom:14px"><div class="seg">' +
+      [['upcoming', '예정'], ['past', '지난'], ['all', '전체']].map(function (w) {
+        return '<button data-a="bf-when" data-v="' + w[0] + '" class="' + (f.when === w[0] ? 'on' : '') + '">' + w[1] + '</button>';
+      }).join('') + '</div><select data-bf="meeting">' + opts + '</select>' +
+      '<label class="row small"><input type="checkbox" data-bf="cancelled"' + (f.cancelled ? ' checked' : '') + '> 취소된 예약 포함</label>' +
+      '<span class="grow"></span><button class="btn" data-a="bf-reload">새로고침</button><button class="btn" data-a="csv">CSV 다운로드</button>' +
+      '<a class="btn" href="' + esc(S.data.sheetUrl) + '">스프레드시트</a></div>';
+    h += '<div class="muted small" style="margin-bottom:8px">' + rows.length + '건 · 예약 취소는 구글 캘린더에서 내 일정을 삭제하면 됩니다.</div>';
+    h += '<div class="tablewrap"><table><thead><tr><th>날짜</th><th>시간</th><th>미팅</th><th>이름</th><th>이메일</th><th>답변</th><th>상태</th></tr></thead><tbody>';
+    if (!rows.length) h += '<tr><td colspan="7" class="muted" style="text-align:center;padding:30px">예약이 없습니다.</td></tr>';
+    rows.forEach(function (b) {
+      var ans = Object.keys(b.answers || {}).filter(function (k) { return k !== 'name'; })
+        .map(function (k) { return esc(b.answers[k]); }).join('<br>');
+      var st = b.status === 'confirmed' ? '<span class="badge ok">확정</span>'
+        : '<span class="badge cancel">취소' + (b.cancelledBy === 'student' ? ' (학생)' : b.cancelledBy === 'calendar' ? ' (캘린더)' : '') + '</span>';
+      h += '<tr class="' + (b.status === 'confirmed' ? '' : 'cancelled') + '"><td>' + esc(b.dateLabel) + '</td><td>' + esc(b.time) + '</td><td>' + esc(b.meeting) +
+        '</td><td>' + esc(b.name) + '</td><td>' + esc(b.email) + '</td><td class="small">' + ans + '</td><td class="st">' + st + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+    app.innerHTML = h;
+    savebar.innerHTML = '';
+    S._rows = rows;
+  }
+
+  function downloadCsv() {
+    var head = ['날짜', '시간', '미팅', '이름', '이메일', '답변', '상태'];
+    var lines = [head].concat((S._rows || []).map(function (b) {
+      var ans = Object.keys(b.answers || {}).filter(function (k) { return k !== 'name'; }).map(function (k) { return b.answers[k]; }).join(' / ');
+      return [b.date, b.time, b.meeting, b.name, b.email, ans, b.status === 'confirmed' ? '확정' : '취소'];
+    })).map(function (r) {
+      return r.map(function (c) {
+        var s = String(c == null ? '' : c);
+        if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;   // Excel/Sheets must not run it as a formula
+        return '"' + s.replace(/"/g, '""') + '"';
+      }).join(',');
+    });
+    var url = URL.createObjectURL(new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'bookings-' + todayStr() + '.csv';
+    a.target = '_self';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+  }
+
+  /* ================= settings ================= */
+
+  function renderSettings() {
+    app.innerHTML = '<div class="card"><h2>설정</h2>' +
+      '<label class="f"><span>내 이름</span><small>예약 페이지와 메일 보낸 사람 이름, {host} 변수에 쓰입니다.</small>' +
+      '<input type="text" id="set-host" value="' + esc(S.data.host) + '" style="width:260px"></label>' +
+      '<button class="btn primary" data-a="save-settings">저장</button></div>' +
+      '<div class="card"><h2>정보</h2><div class="muted">관리자 계정: ' + esc(S.data.owner) + '</div>' +
+      '<div class="muted">예약 페이지: ' + esc(S.data.bookUrl) + '</div>' +
+      '<div style="margin-top:8px"><a class="btn" href="' + esc(S.data.sheetUrl) + '">데이터 스프레드시트 열기</a></div>' +
+      '<div class="muted small" style="margin-top:10px">스프레드시트를 직접 수정하면 시스템이 오작동할 수 있습니다. 보기 용도로만 사용하세요.</div></div>';
+    savebar.innerHTML = '';
+  }
+
+  /* ================= render & events ================= */
+
+  function render() {
+    document.querySelectorAll('#nav button').forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-tab') === (S.tab === 'edit' ? 'meetings' : S.tab));
+    });
+    if (!S.data) return;
+    if (S.tab === 'meetings') renderMeetings();
+    else if (S.tab === 'edit') renderEditor();
+    else if (S.tab === 'bookings') renderBookings();
+    else renderSettings();
+  }
+
+  function reload() {
+    return call('adminLoad').then(function (d) { S.data = d; if (S.tab !== 'edit') render(); });
+  }
+
+  document.getElementById('nav').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tab]');
+    if (!b) return;
+    if (S.tab === 'edit' && !confirmLeave()) return;
+    S.draft = null;
+    S.tab = b.getAttribute('data-tab'); S.armed = null;
+    if (S.tab === 'bookings') S.bookings = null;
+    render();
+  });
+
+  // Field edits update the draft in place (no re-render, keeps focus).
+  document.addEventListener('input', onField);
+  document.addEventListener('change', onField);
+  function onField(e) {
+    var el = e.target, d = S.draft;
+    if (el.hasAttribute('data-bf')) {
+      var k = el.getAttribute('data-bf');
+      S.bf[k] = el.type === 'checkbox' ? el.checked : el.value;
+      if (e.type === 'change') render();
+      return;
+    }
+    if (!d) return;
+    if (el.hasAttribute('data-f')) {
+      var f = el.getAttribute('data-f'), type = el.getAttribute('data-type');
+      d[f] = type === 'bool' ? el.checked : type === 'num' ? el.value : el.value;
+      if (f === 'duration' && e.type === 'change') render();
+    } else if (el.hasAttribute('data-t')) {
+      d.templates[el.getAttribute('data-t')] = el.value;
+    } else if (el.hasAttribute('data-w')) {
+      var p = el.getAttribute('data-w').split('|');
+      var path = p.slice(0, p.length - 2).join('|');
+      var val = el.value;
+      if (e.type === 'change') {           // on leaving the field: tidy up "930" -> "09:30"
+        var n = normTime(val);
+        if (n) { val = n; el.value = n; }
+        el.classList.toggle('bad', !n);
+      }
+      winList(path)[Number(p[p.length - 2])][Number(p[p.length - 1])] = val;
+    } else if (el.hasAttribute('data-dayon') && e.type === 'change') {
+      var key = el.getAttribute('data-dayon');
+      d.weekly = d.weekly || {};
+      d.weekly[key] = el.checked ? [['09:00', '17:00']] : [];
+      render();
+    } else if (el.hasAttribute('data-dd')) {
+      var q = el.getAttribute('data-dd').split('|');
+      (q[0] === 'ov' ? d._overrides : d._dates)[Number(q[1])].date = el.value;
+    } else if (el.hasAttribute('data-off') && e.type === 'change') {
+      var row = d._overrides[Number(el.getAttribute('data-off'))];
+      row.windows = el.checked ? [] : [['10:00', '12:00']];
+      render();
+    } else if (el.hasAttribute('data-q')) {
+      var qq = el.getAttribute('data-q').split('|');
+      d.questions[Number(qq[0])][qq[1]] = el.type === 'checkbox' ? el.checked : el.value;
+      if (qq[1] === 'key' && e.type === 'change') render();
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-a]');
+    if (!el || el.disabled) return;
+    var a = el.getAttribute('data-a'), id = el.getAttribute('data-id'), d = S.draft;
+    if (a !== 'del' && S.armed) { S.armed = null; if (S.tab === 'meetings') renderMeetings(); }
+    if (S.pending && (a === 'dup' || a === 'pause' || a === 'del')) return; // one list action at a time
+    var listAction = function (p, msg) {
+      S.pending = true;
+      p.then(function () { S.pending = false; toast(msg); return reload(); })
+        .catch(function (err) { S.pending = false; alertErr(err); });
+    };
+
+    if (a === 'new') openEditor(newMeeting());
+    else if (a === 'edit') openEditor(findMeeting(id));
+    else if (a === 'back') { if (!confirmLeave()) return; S.draft = null; S.tab = 'meetings'; render(); }
+    else if (a === 'copy') {
+      var input = el.parentNode.querySelector('input');
+      input.focus(); input.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      if (ok) toast('링크를 복사했습니다');
+      else if (navigator.clipboard) {
+        navigator.clipboard.writeText(input.value).then(function () { toast('링크를 복사했습니다'); },
+          function () { toast('링크를 선택했습니다. Ctrl+C로 복사하세요'); });
+      } else toast('링크를 선택했습니다. Ctrl+C로 복사하세요');
+    }
+    else if (a === 'dup') listAction(call('adminDuplicateMeeting', id), '복제했습니다 (일시정지 상태)');
+    else if (a === 'pause') {
+      var m = findMeeting(id);
+      listAction(call('adminSetPaused', id, !m.paused), m.paused ? '예약을 다시 받습니다' : '예약을 일시정지했습니다');
+    }
+    else if (a === 'del') {
+      if (S.armed !== id) { S.armed = id; render(); return; }
+      S.armed = null;
+      renderMeetings();
+      listAction(call('adminDeleteMeeting', id), '삭제했습니다');
+    }
+    // editor
+    else if (a === 'dur') { d.duration = Number(el.getAttribute('data-n')); render(); }
+    else if (a === 'color') { d.color = el.getAttribute('data-c'); render(); }
+    else if (a === 'mode') { d.mode = el.getAttribute('data-v'); render(); }
+    else if (a === 'win-add') {
+      var wins = winList(el.getAttribute('data-p'));
+      var start = lastEnd(wins) || '14:00';
+      wins.push([start, plusHour(start)]);
+      render();
+    }
+    else if (a === 'win-del') {
+      var pp = el.getAttribute('data-p').split('|');
+      winList(pp.slice(0, pp.length - 1).join('|')).splice(Number(pp[pp.length - 1]), 1);
+      render();
+    }
+    else if (a === 'date-add') {
+      var kind = el.getAttribute('data-k');
+      // No date preselected: the professor must pick one before saving.
+      (kind === 'ov' ? d._overrides : d._dates).push({ date: '', windows: kind === 'ov' ? [] : [['14:00', '17:00']] });
+      render();
+    }
+    else if (a === 'date-del') {
+      var dp = el.getAttribute('data-p').split('|');
+      (dp[0] === 'ov' ? d._overrides : d._dates).splice(Number(dp[1]), 1);
+      render();
+    }
+    else if (a === 'q-add') {
+      var n = 1; while (d.questions.some(function (q) { return q.key === 'q' + n; })) n++;
+      d.questions.push({ key: 'q' + n, label: '', type: 'text', required: false, help: '' });
+      render();
+    }
+    else if (a === 'q-name') { d.questions.unshift({ key: 'name', label: '이름', type: 'text', required: true, help: '' }); render(); }
+    else if (a === 'q-del') { d.questions.splice(Number(el.getAttribute('data-i')), 1); render(); }
+    else if (a === 'tpl-reset') {
+      el.getAttribute('data-k').split(',').forEach(function (k) { d.templates[k] = S.data.defaults[k]; });
+      render();
+    }
+    else if (a === 'save') {
+      var problem = validateDraft(d);
+      if (problem) { S.error = problem; render(); return; }
+      S.saving = true; S.error = ''; render();
+      var savingDraft = S.draft;
+      call('adminSaveMeeting', collectDraft()).then(function (saved) {
+        S.saving = false;
+        if (S.draft !== savingDraft) { toast('저장했습니다'); reload().catch(alertErr); return; }
+        S.draft = null; S.tab = 'meetings';
+        var i = S.data.meetings.map(function (m) { return m.id; }).indexOf(saved.id);
+        if (i === -1) S.data.meetings.push(saved); else S.data.meetings[i] = saved;
+        render();                       // show the list right away; refresh in the background
+        toast('저장했습니다');
+        reload().catch(alertErr);
+      }, function (err) { S.saving = false; if (S.draft === savingDraft) { S.error = err.message; render(); } else alertErr(err); });
+    }
+    // bookings
+    else if (a === 'bf-when') { S.bf.when = el.getAttribute('data-v'); render(); }
+    else if (a === 'bf-reload') { S.bookings = null; render(); }
+    else if (a === 'csv') downloadCsv();
+    // settings
+    else if (a === 'save-settings') {
+      call('adminSaveSettings', { host: document.getElementById('set-host').value }).then(function () { toast('저장했습니다'); return reload(); }, alertErr);
+    }
+  });
+
+  function alertErr(e) { toast('오류: ' + e.message); }
+
+  reload().catch(function (e) { app.innerHTML = '<div class="card err">' + esc(e.message) + '</div>'; });
+})();
+</script>
+</body>
+</html>
