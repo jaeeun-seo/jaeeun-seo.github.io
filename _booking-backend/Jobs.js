@@ -55,8 +55,14 @@ function runJob_(full) {
       if (full) queueReminders_(active, meetings, outbox);
       queueConflicts_(active, meetings, events, outbox);
     }
+  } catch (e) {
+    recordError_('자동 작업', e);
   } finally {
     lock.releaseLock();
+  }
+  if (full) {
+    setProp_('LAST_JOB', String(Date.now()));   // heartbeat, see checkHeartbeat_
+    try { checkQuota_(); } catch (e) { /* ignore */ }
   }
 
   // --- slow work, lock released ---
@@ -104,7 +110,7 @@ function claimLeftovers_(bookings, outbox) {
     try {
       outbox.deliveries.push({ b: b, kinds: claimPendingMail_(b) });
     } catch (e) {
-      console.error('claim failed for ' + b.id + ': ' + e);
+      recordError_('밀린 메일', e);
     }
   });
 }
@@ -120,7 +126,7 @@ function syncDeletedEvents_(upcoming, events) {
       // Not in the listed range (e.g. moved far away by the professor): ask directly.
       if (ev ? ev.status === 'cancelled' : eventGone_(b.eventId)) cancelByCalendar_(b);
     } catch (e) {
-      console.error('sync failed for ' + b.id + ': ' + e);
+      recordError_('캘린더 동기화', e);
     }
   });
 }
@@ -157,7 +163,7 @@ function queueReminders_(active, meetings, outbox) {
       updateBooking_(b, { reminderSent: new Date().toISOString() });
       outbox.reminders.push({ b: b, m: m });
     } catch (e) {
-      console.error('reminder queue failed for ' + b.id + ': ' + e);
+      recordError_('리마인더', e);
     }
   });
 }
@@ -218,7 +224,7 @@ function queueConflicts_(active, meetings, events, outbox) {
           .join('\n')
       });
     } catch (err) {
-      console.error('conflict check failed for ' + b.id + ': ' + err);
+      recordError_('충돌 확인', err);
     }
   });
 }

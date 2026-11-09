@@ -280,7 +280,7 @@ function deliverMail_(b, kinds) {
       todo.shift();
     }
   } catch (e) {
-    console.error('deliver failed for ' + b.id + ': ' + e);
+    recordError_('메일·학생 일정', e);
   }
   if (todo.length) {
     try {
@@ -288,7 +288,7 @@ function deliverMail_(b, kinds) {
         updateBooking_(fresh, { pendingMail: mergeKinds_(fresh.pendingMail, todo.join(',')) });
       });
     } catch (e) {
-      console.error('could not re-queue ' + todo.join(',') + ' for ' + b.id + ': ' + e);
+      recordError_('메일 재대기', e);
     }
   }
 }
@@ -448,7 +448,7 @@ function insertStudentEvent_(resource) {
     try {
       return Calendar.Events.insert(resource, studentCalendarId_(attempt > 0), { sendUpdates: 'none' }).id;
     } catch (e) {
-      console.error('student event failed: ' + e); // booking still valid; email has a calendar link
+      if (attempt > 0) recordError_('학생 캘린더 일정', e); // booking still valid; email has a calendar link
     }
   }
   return '';

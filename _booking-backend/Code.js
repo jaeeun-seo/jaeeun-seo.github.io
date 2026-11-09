@@ -37,11 +37,13 @@ function doPost(e) {
 function handle_(actions, p) {
   const fn = actions[p.action];
   if (!fn) return json_({ ok: false, error: 'BAD_REQUEST', message: '알 수 없는 요청입니다.' });
+  try { checkHeartbeat_(); } catch (e) { /* never block a request */ }
   try {
     return json_(Object.assign({ ok: true }, fn(p)));
   } catch (err) {
     if (err.code) return json_({ ok: false, error: err.code, message: err.message });
     console.error(err && err.stack ? err.stack : err);
+    recordError_('요청 ' + p.action, err);
     return json_({ ok: false, error: 'SERVER', message: '서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' });
   }
 }

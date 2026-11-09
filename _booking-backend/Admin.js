@@ -35,7 +35,9 @@ function adminLoad() {
     host: hostName_(),
     owner: ownerEmail_(),
     sheetUrl: db_().getUrl(),
-    holidays: upcomingHolidays_(180)
+    holidays: upcomingHolidays_(180),
+    lastJob: Number(prop_('LAST_JOB') || 0),
+    mailQuota: MailApp.getRemainingDailyQuota()
   };
 }
 

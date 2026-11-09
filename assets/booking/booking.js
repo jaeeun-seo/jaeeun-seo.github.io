@@ -6,7 +6,7 @@
   var app = document.getElementById('booking-app');
   var params = new URLSearchParams(location.search);
   var DOW = ['일', '월', '화', '수', '목', '금', '토'];
-  var HEAD = ['월', '화', '수', '목', '금', '토', '일'];
+  var HEAD = ['일', '월', '화', '수', '목', '금', '토'];   // weeks start on Sunday
 
   var S = {
     mid: params.get('m'),
@@ -194,7 +194,7 @@
     var canPrev = mo.y * 12 + mo.m > firstMo.y * 12 + firstMo.m;
     var canNext = mo.y * 12 + mo.m < lastMo.y * 12 + lastMo.m;
 
-    var offset = (new Date(mo.y, mo.m, 1).getDay() + 6) % 7;
+    var offset = new Date(mo.y, mo.m, 1).getDay();
     var days = new Date(mo.y, mo.m + 1, 0).getDate();
     var cells = '';
     for (var i = 0; i < offset; i++) cells += '<span></span>';

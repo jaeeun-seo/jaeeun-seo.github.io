@@ -512,11 +512,26 @@
 
   /* ================= settings ================= */
 
+  function healthHtml() {
+    var d = S.data, lines = [];
+    if (!d.lastJob) lines.push('<div>자동 작업: 아직 기록 없음 (배포 직후라면 10분 안에 실행됩니다)</div>');
+    else {
+      var mins = Math.round((Date.now() - d.lastJob) / 60000);
+      var ok = mins <= 60;
+      lines.push('<div>자동 작업 마지막 실행: ' + (mins < 1 ? '방금' : mins + '분 전') +
+        (ok ? ' <span class="badge ok">정상</span>' : ' <span class="badge cancel">멈춤</span> Setup.gs의 setup 함수를 한 번 실행하세요.') + '</div>');
+    }
+    lines.push('<div>오늘 남은 메일 한도: ' + d.mailQuota + '통' + (d.mailQuota < 10 ? ' <span class="badge paused">부족</span>' : '') + '</div>');
+    lines.push('<div class="muted small" style="margin-top:6px">오류가 반복되거나, 자동 작업이 멈추거나, 메일 한도가 거의 차면 ' + esc(d.owner) + '(으)로 알림 메일이 갑니다. (같은 문제는 6시간에 한 번)</div>');
+    return lines.join('');
+  }
+
   function renderSettings() {
     app.innerHTML = '<div class="card"><h2>설정</h2>' +
       '<label class="f"><span>내 이름</span><small>예약 페이지와 메일 보낸 사람 이름, {host} 변수에 쓰입니다.</small>' +
       '<input type="text" id="set-host" value="' + esc(S.data.host) + '" style="width:260px"></label>' +
       '<button class="btn primary" data-a="save-settings">저장</button></div>' +
+      '<div class="card"><h2>시스템 상태</h2>' + healthHtml() + '</div>' +
       '<div class="card"><h2>정보</h2><div class="muted">관리자 계정: ' + esc(S.data.owner) + '</div>' +
       '<div class="muted">예약 페이지: ' + esc(S.data.bookUrl) + '</div>' +
       '<div style="margin-top:8px"><a class="btn" href="' + esc(S.data.sheetUrl) + '">데이터 스프레드시트 열기</a></div>' +
