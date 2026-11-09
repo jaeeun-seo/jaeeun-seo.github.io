@@ -187,7 +187,6 @@ h1, h2 {
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');	
 .abstract-content {
   max-height: 0;
   overflow: hidden;
@@ -199,12 +198,9 @@ h1, h2 {
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;  
 }
+/* Open height is set by the toggle script from the abstract's real height. */
 .abstract-content.open {
-  max-height: 400px;
   opacity: 1;
-  .chevron-icon i {
-    transform: rotate(180deg);  
-  }
 }
 
 .abstract-toggle {
@@ -214,10 +210,6 @@ h1, h2 {
   color: var(--link);
   &:hover {
     color: var(--link-dark);
-    .chevron-icon i {
-      color: var(--link-dark);
-      transition: transform 0.3s ease;
-    }
   }
 }
 
@@ -229,7 +221,18 @@ h1, h2 {
   transform: translateY(-42%);
   pointer-events: none;
 }
-.abstract-toggle.open .chevron-icon i {
+.abstract-toggle .chevron-icon svg {
+  display: block;
+  width: 1em;
+  height: 0.6em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s ease;
+}
+.abstract-toggle.open .chevron-icon svg {
   transform: rotate(180deg);
 }
 
@@ -284,10 +287,6 @@ h1, h2 {
   .theme-switch, 
   .sidebar-footer { 
     display: none;
-  }
-  /* Narrow screens wrap abstracts onto more lines; 400px would cut them off. */
-  .abstract-content.open {
-    max-height: 700px;
   }
 }
 @media (max-width: 400px) {

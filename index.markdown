@@ -45,7 +45,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           <span class="delimeter">•</span><a href="{{ p.online_appendix }}" class="file" target="_blank">[online appendix]</a>
         {%- endif -%}
 	{%- if p.abstract -%}
-	    <span class="delimeter">•</span><a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>]</a>
+	    <span class="delimeter">•</span><a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></span>]</a>
 	{% endif %}
       </span>
       {% if p.abstract %}
@@ -93,7 +93,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           <span class="delimeter">•</span><a href="{{ p.online_appendix }}" class="file" target="_blank">[online appendix]</a>
         {%- endif -%}
 	{%- if p.abstract -%}
-	    <span class="delimeter">•</span><a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>]</a>
+	    <span class="delimeter">•</span><a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></span>]</a>
 	{% endif %}
       </span>
       {% if p.abstract %}
@@ -137,7 +137,7 @@ My CV is available <a href="{{ site.CV_file }}" target="_blank">here</a>
           <span class="delimeter">•</span><a href="{{ p.code }}" class="file" target="_blank">[code]</a>
         {%- endif -%}
 	{%- if p.abstract -%}
-	    <a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><i class="fas fa-chevron-down"></i></span>]</a>
+	    <a href="javascript:void(0);" class="file abstract-toggle">[abstract&nbsp;&nbsp;<span class="chevron-icon"><svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></span>]</a>
 	{% endif %}
       </span>
       {% if p.abstract %}

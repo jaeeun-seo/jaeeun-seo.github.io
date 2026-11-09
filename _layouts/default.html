@@ -7,18 +7,24 @@
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{{ site.title }}</title>
 
+  <!-- No tab icon; this stops browsers from requesting a missing /favicon.ico. -->
+  <link rel="icon" href="data:,">
+
+  <!-- Theme before anything renders, so dark-mode visitors never see a white flash. -->
+  <script>
+    (function () {
+      var saved = null;
+      try { saved = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
+      var dark = saved === 'dark' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    })();
+  </script>
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css?family=Merriweather:300|Raleway:400,500,600,700" rel="stylesheet">
-
-  <!-- Font Awesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <!-- Raleway: body. Work Sans: headings and name. Open Sans Light: abstracts. -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&family=Work+Sans:wght@400;700&family=Open+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
 
   <!-- Load CSS -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
@@ -54,22 +60,13 @@
     const slider = document.getElementById('theme-switch');
     const root   = document.documentElement;
 
-    const saved = localStorage.getItem('theme');
-    const systemPrefDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const isDark = saved === 'dark' || (saved === null && systemPrefDark);
-
-    if (isDark) {
-      root.dataset.theme = 'dark';
-      slider.classList.add('active');
-    } else {
-      root.dataset.theme = 'light';
-    }
+    if (root.dataset.theme === 'dark') slider.classList.add('active');   // theme was set in <head>
 
     slider.addEventListener('click', () => {
       const nextIsDark = slider.classList.toggle('active');
       const nextTheme = nextIsDark ? 'dark' : 'light';
       root.dataset.theme = nextTheme;
-      localStorage.setItem('theme', nextTheme);
+      try { localStorage.setItem('theme', nextTheme); } catch (e) { /* storage blocked */ }
     });
   </script>
   <script>
@@ -78,11 +75,24 @@
         link.addEventListener('click', function () {
           const container = this.closest('.WP, .WIP');
           const abstractDiv = container.querySelector('.abstract-content');
-          const icon = this.querySelector('i');
           const isOpen = abstractDiv.classList.contains('open');
 
+          // Animate between 0 and the abstract's real height (no fixed cap that cuts long text).
+          if (isOpen) {
+            abstractDiv.style.maxHeight = abstractDiv.scrollHeight + 'px';   // from 'none' back to a number
+            void abstractDiv.offsetHeight;                                   // apply it before collapsing
+            abstractDiv.style.maxHeight = '';
+          } else {
+            abstractDiv.style.maxHeight = abstractDiv.scrollHeight + 'px';
+          }
           abstractDiv.classList.toggle('open');
           this.classList.toggle('open');
+        });
+      });
+      // Once fully open, drop the cap so later reflows (window resize, font load) can't cut the text.
+      document.querySelectorAll('.abstract-content').forEach(div => {
+        div.addEventListener('transitionend', e => {
+          if (e.propertyName === 'max-height' && div.classList.contains('open')) div.style.maxHeight = 'none';
         });
       });
     });
