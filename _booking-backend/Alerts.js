@@ -3,6 +3,7 @@
  *   errors - 3+ unexpected server errors within an hour
  *   job    - the 10-minute background job hasn't run for over an hour
  *   quota  - fewer than 10 of today's mails left
+ *   client - a script error reported by a student's booking page
  */
 
 function alertOwner_(topic, subject, lines) {
@@ -43,6 +44,30 @@ function recordError_(where, err) {
   } catch (e) {
     console.error('recordError_ failed: ' + e);
   }
+}
+
+/**
+ * POST {action:'clientError', msg, stack, view, ua}: a script error on a student's
+ * booking page. Alerts on the first one (6-hour cooldown), listing recent reports.
+ * Public and unauthenticated, so everything is length-capped plain text.
+ */
+function apiClientError_(p) {
+  const now = Date.now();
+  let list = [];
+  try { list = JSON.parse(cache_().get('cerrs:v1') || '[]'); } catch (e) { list = []; }
+  list = list.filter(function (x) { return now - x.at < 6 * 60 * 60 * 1000; }).slice(-9);
+  const item = { at: now, view: str_(p.view, 20), msg: str_(p.msg, 300), stack: str_(p.stack, 600), ua: str_(p.ua, 200) };
+  list.push(item);
+  cache_().put('cerrs:v1', JSON.stringify(list), 6 * 60 * 60);
+  console.warn('client error [' + item.view + '] ' + item.msg + '\n' + item.stack + '\n' + item.ua);
+  alertOwner_('client', '학생 예약 화면에서 오류가 났습니다', [
+    '학생 브라우저에서 예약 화면 스크립트 오류가 보고되었습니다. 최근 보고:',
+    ''
+  ].concat(list.slice(-5).map(function (x) {
+    return '- ' + Utilities.formatDate(new Date(x.at), TZ, 'M/d HH:mm') + ' [화면: ' + (x.view || '?') + '] ' + x.msg +
+      '\n  ' + x.stack.split('\n').slice(0, 3).join('\n  ') + '\n  브라우저: ' + x.ua;
+  })).concat(['', '오래된 브라우저나 확장 프로그램 때문일 수도 있습니다. 같은 오류가 계속 보이면 알려 주세요.']));
+  return {};
 }
 
 /** Called from public requests: notices when the time-based trigger stopped running. */

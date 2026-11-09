@@ -7,6 +7,7 @@
  *   POST {action:'cancel', t, reason}
  *   POST {action:'reschedule', t, date, time}
  *   POST {action:'notify', t}         (sends deferred emails / student calendar copy)
+ *   POST {action:'clientError', msg, stack, view, ua}   (script error on the page -> owner alert)
  * POST bodies are sent as text/plain JSON to avoid CORS preflight.
  */
 // Built lazily so this file doesn't depend on the order Apps Script loads files in.
@@ -14,7 +15,7 @@ function getActions_() {
   return { init: apiInit_, slots: apiSlots_, booking: apiBooking_ };
 }
 function postActions_() {
-  return { book: apiBook_, cancel: apiCancel_, reschedule: apiReschedule_, notify: apiNotify_ };
+  return { book: apiBook_, cancel: apiCancel_, reschedule: apiReschedule_, notify: apiNotify_, clientError: apiClientError_ };
 }
 
 function doGet(e) {

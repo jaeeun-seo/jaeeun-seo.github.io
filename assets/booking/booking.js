@@ -119,6 +119,22 @@
     } catch (e) { /* ignore */ }
   }
 
+  // Reports script errors from this file to the server (owner gets an alert mail).
+  // Errors from other scripts (browser extensions etc.) are ignored; at most 3 per page load.
+  var reported = 0;
+  function reportError(err, file) {
+    var stack = String((err && err.stack) || '');
+    if (reported >= 3 || (file || stack).indexOf('/assets/booking/') < 0) return;
+    reported++;
+    try {
+      fetch(API, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'clientError', msg: String((err && err.message) || err).slice(0, 300),
+          stack: stack.slice(0, 600), view: S.view, ua: navigator.userAgent.slice(0, 200) }) }).catch(function () {});
+    } catch (e) { /* ignore */ }
+  }
+  window.addEventListener('error', function (ev) { reportError(ev.error || ev.message, ev.filename); });
+  window.addEventListener('unhandledrejection', function (ev) { reportError(ev.reason, ''); });
+
   /* ---------- data ---------- */
 
   function markLoaded(from, to) {
