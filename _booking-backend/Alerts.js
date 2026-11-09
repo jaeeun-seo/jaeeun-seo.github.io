@@ -49,14 +49,16 @@ function recordError_(where, err) {
 /**
  * POST {action:'clientError', msg, stack, view, ua}: a script error on a student's
  * booking page. Alerts on the first one (6-hour cooldown), listing recent reports.
- * Public and unauthenticated, so everything is length-capped plain text.
+ * Public and unauthenticated, so everything is length-capped plain text with no
+ * clickable links (see unlink_).
  */
 function apiClientError_(p) {
   const now = Date.now();
   let list = [];
   try { list = JSON.parse(cache_().get('cerrs:v1') || '[]'); } catch (e) { list = []; }
   list = list.filter(function (x) { return now - x.at < 6 * 60 * 60 * 1000; }).slice(-9);
-  const item = { at: now, view: str_(p.view, 20), msg: str_(p.msg, 300), stack: str_(p.stack, 600), ua: str_(p.ua, 200) };
+  const item = { at: now, view: unlink_(str_(p.view, 20)), msg: unlink_(str_(p.msg, 300)),
+    stack: unlink_(str_(p.stack, 600)), ua: unlink_(str_(p.ua, 200)) };
   list.push(item);
   cache_().put('cerrs:v1', JSON.stringify(list), 6 * 60 * 60);
   console.warn('client error [' + item.view + '] ' + item.msg + '\n' + item.stack + '\n' + item.ua);
@@ -68,6 +70,22 @@ function apiClientError_(p) {
       '\n  ' + x.stack.split('\n').slice(0, 3).join('\n  ') + '\n  브라우저: ' + x.ua;
   })).concat(['', '오래된 브라우저나 확장 프로그램 때문일 수도 있습니다. 같은 오류가 계속 보이면 알려 주세요.']));
   return {};
+}
+
+/**
+ * Makes reported text unclickable in the alert mail: full URLs keep only their file
+ * name (stack lines stay readable: "booking.js:12:3"), other schemes are dropped,
+ * and dots in anything domain-like (evil.com, a@b.com) become "[.]".
+ */
+function unlink_(s) {
+  return s
+    .replace(/[a-z][a-z0-9+.-]*:\/\/[^\s()<>]*/gi, function (u) {
+      const pos = (u.match(/(?::\d+){1,2}$/) || [''])[0];          // keep ":line:col"
+      const parts = u.slice(0, u.length - pos.length).split('?')[0].split('#')[0].split('/');
+      return (parts[parts.length - 1] || '(주소)') + pos;
+    })
+    .replace(/\b(?:mailto|javascript|data|blob|tel|sms):[^\s()<>]*/gi, '(주소)')
+    .replace(/[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z][a-z0-9-]+/gi, function (d) { return d.replace(/\./g, '[.]'); });
 }
 
 /** Called from public requests: notices when the time-based trigger stopped running. */
