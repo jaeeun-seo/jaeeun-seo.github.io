@@ -78,6 +78,21 @@ function runJob_(full) {
   outbox.mails.forEach(function (mail) {
     try { send_(mail.to, mail.subject, mail.body, mail.replyTo); } catch (e) { console.error('mail failed: ' + e); }
   });
+  if (full) {
+    try { markSentRead_(); } catch (e) { recordError_('보낸편지함 읽음 처리', e); }
+  }
+}
+
+/**
+ * Mail sent by the script lands in the owner's Sent folder as unread. Marks those
+ * read. "-in:inbox" leaves mail the owner sent to themself (new-booking notices,
+ * alerts) unread in the inbox; replies from students are in the inbox, not Sent.
+ */
+function markSentRead_() {
+  const res = Gmail.Users.Messages.list('me', { q: 'in:sent is:unread -in:inbox', maxResults: 500 });
+  const ids = (res.messages || []).map(function (m) { return m.id; });
+  if (ids.length) Gmail.Users.Messages.batchModify({ ids: ids, removeLabelIds: ['UNREAD'] }, 'me');
+  return ids.length;
 }
 
 /** All primary-calendar events (incl. deleted) from now to the last upcoming booking. */

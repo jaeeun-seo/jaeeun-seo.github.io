@@ -4,7 +4,8 @@
   "exceptionLogging": "STACKDRIVER",
   "dependencies": {
     "enabledAdvancedServices": [
-      { "userSymbol": "Calendar", "serviceId": "calendar", "version": "v3" }
+      { "userSymbol": "Calendar", "serviceId": "calendar", "version": "v3" },
+      { "userSymbol": "Gmail", "serviceId": "gmail", "version": "v1" }
     ]
   },
   "webapp": {
@@ -15,6 +16,7 @@
     "https://www.googleapis.com/auth/calendar",
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/gmail.modify",
     "https://www.googleapis.com/auth/script.scriptapp",
     "https://www.googleapis.com/auth/userinfo.email"
   ]
