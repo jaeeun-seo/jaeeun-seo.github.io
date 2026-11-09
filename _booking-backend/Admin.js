@@ -16,7 +16,7 @@ function requireOwner_() {
 function adminPage_() {
   return HtmlService.createHtmlOutputFromFile('AdminPage')
     .setTitle('미팅 예약 관리')
-    .setFaviconUrl('https://jaeeun-seo.github.io/assets/booking/icon-admin.png')
+    .setFaviconUrl('https://jaeeun-seo.github.io/assets/booking/icon-admin.png?v=2')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
