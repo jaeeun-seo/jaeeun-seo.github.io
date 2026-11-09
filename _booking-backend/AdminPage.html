@@ -204,7 +204,7 @@
       id: '', name: '', description: '', duration: 30, location: '', color: '',
       mode: 'recurring', weekly: {}, overrides: {}, dates: {}, startDate: '', endDate: '', rangeDays: 60,
       minNoticeHours: 12, bufferBefore: 0, bufferAfter: 0, reminderHours: 0,
-      addToStudentCalendar: true, paused: false,
+      addToStudentCalendar: true, skipHolidays: true, paused: false,
       questions: [{ key: 'name', label: '이름', type: 'text', required: true, help: '' }],
       confirmationMessage: '', templates: {}
     };
@@ -311,10 +311,14 @@
         h += '<div class="day"><label class="dname"><input type="checkbox" data-dayon="' + day[0] + '"' + (wins.length ? ' checked' : '') + '> ' + day[1] + '</label>' +
           '<div class="grow">' + (wins.length ? winsHtml('weekly|' + day[0], wins) : '<span class="muted unavail">예약 불가</span>') + '</div></div>';
       });
-      h += '<div class="row" style="margin-top:16px"><span style="font-weight:600">운영 기간</span><input type="date" data-f="startDate" value="' + esc(d.startDate) + '"> ~ ' +
+      h += '<label class="row" style="margin-top:16px"><input type="checkbox" data-f="skipHolidays" data-type="bool"' + (d.skipHolidays !== false ? ' checked' : '') + '> <span style="font-weight:600">한국 공휴일에는 예약 받지 않기</span><span class="muted small">설날·추석·대체공휴일·선거일 등 법정 공휴일. 특정 공휴일에 열려면 아래 날짜별 예외에 추가하세요.</span></label>' +
+        '<div class="muted small" style="margin:4px 0 0 26px">' + (S.data.holidays && S.data.holidays.length
+          ? '다가오는 공휴일: ' + S.data.holidays.slice(0, 8).map(function (x) { return esc(x.label); }).join(', ') + (S.data.holidays.length > 8 ? ' 외 ' + (S.data.holidays.length - 8) + '일' : '')
+          : '공휴일 정보를 불러오지 못했습니다. (이 경우 공휴일도 평소처럼 열립니다)') + '</div>' +
+        '<div class="row" style="margin-top:12px"><span style="font-weight:600">운영 기간</span><input type="date" data-f="startDate" value="' + esc(d.startDate) + '"> ~ ' +
         '<input type="date" data-f="endDate" value="' + esc(d.endDate) + '"><span class="muted small">비우면 제한 없음</span></div>' +
         '<div class="row" style="margin-top:10px"><span style="font-weight:600">공개 범위</span> 오늘부터 <input type="number" min="1" max="365" data-f="rangeDays" data-type="num" value="' + esc(d.rangeDays) + '"> 일 앞까지 표시</div>' +
-        '<h2 style="margin-top:22px">날짜별 예외</h2><div class="muted small" style="margin-bottom:6px">특정 날짜만 시간을 바꾸거나 휴무로 지정합니다.</div>' +
+        '<h2 style="margin-top:22px">날짜별 예외</h2><div class="muted small" style="margin-bottom:6px">특정 날짜만 시간을 바꾸거나 휴무로 지정합니다. 여기에 넣은 날짜는 공휴일이어도 그대로 열립니다.</div>' +
         dateRows('ov', d._overrides, true) +
         '<button class="addlink" data-a="date-add" data-k="ov">+ 예외 날짜 추가</button>';
     } else {

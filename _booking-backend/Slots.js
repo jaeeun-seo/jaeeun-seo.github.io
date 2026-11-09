@@ -28,12 +28,53 @@ function dowKey_(dateStr) {
 }
 
 function windowsFor_(m, dateStr) {
-  if (m.mode === 'dates') return (m.dates || {})[dateStr] || [];
+  if (m.mode === 'dates') return (m.dates || {})[dateStr] || [];   // explicit dates: always as set
   const overrides = m.overrides || {};
-  if (Object.prototype.hasOwnProperty.call(overrides, dateStr)) return overrides[dateStr];
+  if (Object.prototype.hasOwnProperty.call(overrides, dateStr)) return overrides[dateStr]; // explicit too
   if (m.startDate && dateStr < m.startDate) return [];
   if (m.endDate && dateStr > m.endDate) return [];
+  if (m.skipHolidays !== false && isHoliday_(dateStr)) return [];  // weekly hours are off on public holidays
   return (m.weekly || {})[dowKey_(dateStr)] || [];
+}
+
+/* ---------- Korean public holidays ----------
+ * From Google's public "Holidays in South Korea" calendar. Only entries whose
+ * description starts with "Public holiday" count (includes substitute holidays
+ * and election days; observances such as Parents' Day do not). Cached per year
+ * for 6 hours. If the calendar can't be read, nothing is blocked.
+ */
+const HOLIDAY_CAL = 'en.south_korea#holiday@group.v.calendar.google.com';
+let HOLIDAYS_ = {};   // year -> { 'yyyy-MM-dd': name }, per execution
+
+function holidaysOfYear_(year) {
+  if (HOLIDAYS_[year]) return HOLIDAYS_[year];
+  const key = 'hol:v1:' + year;
+  const cached = cache_().get(key);
+  if (cached) {
+    try { HOLIDAYS_[year] = JSON.parse(cached); return HOLIDAYS_[year]; } catch (e) { /* refetch */ }
+  }
+  const out = {};
+  try {
+    const items = Calendar.Events.list(HOLIDAY_CAL, {
+      timeMin: year + '-01-01T00:00:00+09:00',
+      timeMax: (Number(year) + 1) + '-01-01T00:00:00+09:00',
+      singleEvents: true,
+      maxResults: 250
+    }).items || [];
+    items.forEach(function (ev) {
+      if (!ev.start || !ev.start.date || String(ev.description || '').indexOf('Public holiday') !== 0) return;
+      for (let d = ev.start.date; d < ev.end.date; d = addDays_(d, 1)) out[d] = ev.summary || '';
+    });
+    cache_().put(key, JSON.stringify(out), 6 * 60 * 60);
+  } catch (e) {
+    console.error('holiday calendar unavailable: ' + e);   // don't cache: retry next time
+  }
+  HOLIDAYS_[year] = out;
+  return out;
+}
+
+function isHoliday_(dateStr) {
+  return Object.prototype.hasOwnProperty.call(holidaysOfYear_(dateStr.slice(0, 4)), dateStr);
 }
 
 /** Last date students may see for this meeting. */

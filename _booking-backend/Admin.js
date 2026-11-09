@@ -34,7 +34,8 @@ function adminLoad() {
     bookUrl: bookUrl_(),
     host: hostName_(),
     owner: ownerEmail_(),
-    sheetUrl: db_().getUrl()
+    sheetUrl: db_().getUrl(),
+    holidays: upcomingHolidays_(180)
   };
 }
 
@@ -61,6 +62,19 @@ function adminBookings() {
       createdAt: b.createdAt
     };
   }).sort(function (a, b) { return a.start < b.start ? -1 : 1; });
+}
+
+/** Public holidays from today through the next `days` days: [{date, label, name}]. */
+function upcomingHolidays_(days) {
+  const today = todayStr_(), last = addDays_(today, days);
+  const out = [];
+  [today.slice(0, 4), last.slice(0, 4)].filter(function (y, i, a) { return a.indexOf(y) === i; }).forEach(function (y) {
+    const map = holidaysOfYear_(y);
+    Object.keys(map).sort().forEach(function (d) {
+      if (d >= today && d <= last) out.push({ date: d, label: shortDate_(kst_(d, '12:00')), name: map[d] });
+    });
+  });
+  return out;
 }
 
 /* ---------- write ---------- */
@@ -222,6 +236,7 @@ function cleanMeeting_(x) {
     bufferAfter: num_(x.bufferAfter, 0, 240, 0),
     reminderHours: num_(x.reminderHours, 0, 24 * 14, 0),
     addToStudentCalendar: x.addToStudentCalendar !== false,
+    skipHolidays: x.skipHolidays !== false,
     paused: !!x.paused,
     questions: questions,
     confirmationMessage: str_(x.confirmationMessage, 2000),
