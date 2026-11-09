@@ -49,11 +49,11 @@ function runJob_(full) {
     if (upcoming.length) {
       const meetings = {};
       getMeetings_().forEach(function (m) { meetings[m.id] = m; });
-      const events = listEvents_(upcoming);
+      const events = listEvents_(upcoming);              // primary calendar (owner events live here)
       syncDeletedEvents_(upcoming, events);
       const active = upcoming.filter(function (b) { return b.status === 'confirmed'; });
       if (full) queueReminders_(active, meetings, outbox);
-      queueConflicts_(active, meetings, events, outbox);
+      queueConflicts_(active, meetings, events.concat(listExtraEvents_(upcoming)), outbox);
     }
   } catch (e) {
     recordError_('자동 작업', e);
@@ -98,6 +98,32 @@ function listEvents_(upcoming) {
     (res.items || []).forEach(function (ev) { items.push(ev); });
     pageToken = res.nextPageToken;
   } while (pageToken);
+  return items;
+}
+
+/** Events of the extra busy calendars (for conflict warnings only). */
+function listExtraEvents_(upcoming) {
+  let maxEnd = 0;
+  upcoming.forEach(function (b) { maxEnd = Math.max(maxEnd, new Date(b.end).getTime()); });
+  const items = [];
+  busyCalendarIds_().slice(1).forEach(function (calId) {
+    try {
+      let pageToken;
+      do {
+        const res = Calendar.Events.list(calId, {
+          timeMin: new Date().toISOString(),
+          timeMax: new Date(maxEnd + 60 * MIN).toISOString(),
+          singleEvents: true,
+          maxResults: 2500,
+          pageToken: pageToken
+        });
+        (res.items || []).forEach(function (ev) { items.push(ev); });
+        pageToken = res.nextPageToken;
+      } while (pageToken);
+    } catch (e) {
+      recordError_('추가 캘린더 읽기', e);
+    }
+  });
   return items;
 }
 

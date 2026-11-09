@@ -16,7 +16,7 @@ function requireOwner_() {
 function adminPage_() {
   return HtmlService.createHtmlOutputFromFile('AdminPage')
     .setTitle('미팅 예약 관리')
-    .setFaviconUrl('https://jaeeun-seo.github.io/assets/booking/icon-admin.png?v=2')
+    .setFaviconUrl('https://jaeeun-seo.github.io/assets/booking/icon-admin.png')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
 
@@ -37,6 +37,7 @@ function adminLoad() {
     sheetUrl: db_().getUrl(),
     holidays: upcomingHolidays_(180),
     lastJob: Number(prop_('LAST_JOB') || 0),
+    calendars: listCalendars_(),
     mailQuota: MailApp.getRemainingDailyQuota()
   };
 }
@@ -138,11 +139,29 @@ function adminDeleteMeeting(id) {
   return true;
 }
 
+/** The owner's calendars (except the hidden student-copy calendar), with busy-check flags. */
+function listCalendars_() {
+  const chosen = busyCalendarIds_();
+  const studentCal = prop_('STUDENT_CAL_ID');
+  return CalendarApp.getAllCalendars()
+    .filter(function (c) { return c.getId() !== studentCal; })
+    .map(function (c) {
+      const primary = c.isMyPrimaryCalendar();
+      return { id: c.getId(), name: c.getName(), primary: primary, busy: primary || chosen.indexOf(c.getId()) !== -1 };
+    })
+    .sort(function (a, b) { return (b.primary - a.primary) || a.name.localeCompare(b.name); });
+}
+
 function adminSaveSettings(s) {
   requireOwner_();
   const host = String((s && s.host) || '').trim().slice(0, 50);
   if (!host) throw new Error('이름을 입력해 주세요.');
   setProp_('HOST_NAME', host);
+  if (s && s.busyCalendars) {
+    const valid = listCalendars_().filter(function (c) { return !c.primary; }).map(function (c) { return c.id; });
+    const ids = s.busyCalendars.filter(function (id) { return valid.indexOf(id) !== -1; });
+    setProp_('BUSY_CAL_IDS', ids.join(','));
+  }
   return true;
 }
 

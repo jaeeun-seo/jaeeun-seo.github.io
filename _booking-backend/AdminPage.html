@@ -530,6 +530,13 @@
     app.innerHTML = '<div class="card"><h2>설정</h2>' +
       '<label class="f"><span>내 이름</span><small>예약 페이지와 메일 보낸 사람 이름, {host} 변수에 쓰입니다.</small>' +
       '<input type="text" id="set-host" value="' + esc(S.data.host) + '" style="width:260px"></label>' +
+      '<div class="f" style="margin-bottom:14px"><span style="display:block;font-weight:600;margin-bottom:4px">바쁜 시간 확인에 포함할 캘린더</span>' +
+      '<small class="muted" style="display:block;margin-bottom:6px">체크한 캘린더에 \'바쁨\' 일정이 있으면 그 시간에는 예약을 받지 않고, 예약과 겹치면 충돌 알림을 보냅니다.</small>' +
+      (S.data.calendars || []).map(function (c) {
+        return '<label class="row small" style="margin-bottom:4px"><input type="checkbox" class="busy-cal" value="' + esc(c.id) + '"' +
+          (c.busy ? ' checked' : '') + (c.primary ? ' disabled' : '') + '> ' + esc(c.name) +
+          (c.primary ? ' <span class="badge">기본 캘린더 · 항상 포함</span>' : '') + '</label>';
+      }).join('') + '</div>' +
       '<button class="btn primary" data-a="save-settings">저장</button></div>' +
       '<div class="card"><h2>시스템 상태</h2>' + healthHtml() + '</div>' +
       '<div class="card"><h2>정보</h2><div class="muted">관리자 계정: ' + esc(S.data.owner) + '</div>' +
@@ -709,7 +716,9 @@
     else if (a === 'csv') downloadCsv();
     // settings
     else if (a === 'save-settings') {
-      call('adminSaveSettings', { host: document.getElementById('set-host').value }).then(function () { toast('저장했습니다'); return reload(); }, alertErr);
+      var busyCalendars = Array.prototype.slice.call(document.querySelectorAll('input.busy-cal:checked:not([disabled])'))
+        .map(function (x) { return x.value; });
+      call('adminSaveSettings', { host: document.getElementById('set-host').value, busyCalendars: busyCalendars }).then(function () { toast('저장했습니다'); return reload(); }, alertErr);
     }
   });
 

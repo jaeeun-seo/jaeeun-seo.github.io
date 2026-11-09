@@ -37,6 +37,12 @@ function hostName_() {
 function bookUrl_() {
   return prop_('BOOK_URL') || DEFAULT_BOOK_URL;
 }
+/** Calendars whose busy events block bookings: primary + those ticked in admin settings. */
+function busyCalendarIds_() {
+  const extra = String(prop_('BUSY_CAL_IDS') || '').split(',').filter(function (id) { return id && id !== 'primary'; });
+  return ['primary'].concat(extra);
+}
+
 function cache_() {
   return CacheService.getScriptCache();
 }

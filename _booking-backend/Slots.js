@@ -143,12 +143,14 @@ function getBusy_(fromMs, toMs, opts) {
     timeMin: new Date(fromMs).toISOString(),
     timeMax: new Date(toMs).toISOString(),
     timeZone: TZ,
-    items: [{ id: 'primary' }]
+    items: busyCalendarIds_().map(function (id) { return { id: id }; })
   });
+  const busy = [];
   const cals = res.calendars || {};
-  const primary = cals.primary || cals[Object.keys(cals)[0]] || { busy: [] };
-  const busy = (primary.busy || []).map(function (b) {
-    return { s: new Date(b.start).getTime(), e: new Date(b.end).getTime() };
+  Object.keys(cals).forEach(function (id) {   // a calendar that can't be read just reports errors
+    (cals[id].busy || []).forEach(function (b) {
+      busy.push({ s: new Date(b.start).getTime(), e: new Date(b.end).getTime() });
+    });
   });
 
   // The booking being rescheduled must not block itself (free/busy may have
