@@ -35,9 +35,9 @@ function adminLoad() {
     host: hostName_(),
     owner: ownerEmail_(),
     sheetUrl: db_().getUrl(),
-    holidays: upcomingHolidays_(180),
+    holidays: safeList_(function () { return upcomingHolidays_(180); }),
     lastJob: Number(prop_('LAST_JOB') || 0),
-    calendars: listCalendars_(),
+    calendars: safeList_(listCalendars_),
     mailQuota: MailApp.getRemainingDailyQuota()
   };
 }
@@ -143,13 +143,28 @@ function adminDeleteMeeting(id) {
 function listCalendars_() {
   const chosen = busyCalendarIds_();
   const studentCal = prop_('STUDENT_CAL_ID');
-  return CalendarApp.getAllCalendars()
+  const list = CalendarApp.getAllCalendars()
     .filter(function (c) { return c.getId() !== studentCal; })
     .map(function (c) {
       const primary = c.isMyPrimaryCalendar();
       return { id: c.getId(), name: c.getName(), primary: primary, busy: primary || chosen.indexOf(c.getId()) !== -1 };
     })
     .sort(function (a, b) { return (b.primary - a.primary) || a.name.localeCompare(b.name); });
+  pruneBusyCalendars_(list);
+  return list;
+}
+
+/** Forgets ticked calendars that no longer exist (deleted / unsubscribed). */
+function pruneBusyCalendars_(list) {
+  const available = list.map(function (c) { return c.id; });
+  const saved = busyCalendarIds_().slice(1);
+  const kept = saved.filter(function (id) { return available.indexOf(id) !== -1; });
+  if (kept.length !== saved.length) setProp_('BUSY_CAL_IDS', kept.join(','));
+}
+
+/** Optional admin-page data must never break the admin page. */
+function safeList_(fn) {
+  try { return fn(); } catch (e) { console.error('admin data failed: ' + e); return []; }
 }
 
 function adminSaveSettings(s) {

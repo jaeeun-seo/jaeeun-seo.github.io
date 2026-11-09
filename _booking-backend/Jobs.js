@@ -61,7 +61,7 @@ function runJob_(full) {
     lock.releaseLock();
   }
   if (full) {
-    setProp_('LAST_JOB', String(Date.now()));   // heartbeat, see checkHeartbeat_
+    try { setProp_('LAST_JOB', String(Date.now())); } catch (e) { /* heartbeat only */ }   // see checkHeartbeat_
     try { checkQuota_(); } catch (e) { /* ignore */ }
   }
 
@@ -121,7 +121,12 @@ function listExtraEvents_(upcoming) {
         pageToken = res.nextPageToken;
       } while (pageToken);
     } catch (e) {
-      recordError_('추가 캘린더 읽기', e);
+      // A deleted/unsubscribed or free-busy-only calendar is not a system fault: don't alert.
+      if (isGoneError_(e) || /403|forbidden|notFound|not found|access/i.test(String(e && e.message))) {
+        console.warn('extra calendar ' + calId + ' unreadable: ' + e);
+      } else {
+        recordError_('추가 캘린더 읽기', e);
+      }
     }
   });
   return items;
