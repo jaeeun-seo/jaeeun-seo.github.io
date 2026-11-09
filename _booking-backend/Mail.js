@@ -59,7 +59,7 @@ function tpl_(m, key) {
 
 function shortDate_(d) {
   d = new Date(d);
-  return Utilities.formatDate(d, TZ, 'M월 d일') + ' (' + KOR_DOW[Number(Utilities.formatDate(d, TZ, 'u'))] + ')';
+  return Utilities.formatDate(d, TZ, 'M/d') + ' (' + KOR_DOW[Number(Utilities.formatDate(d, TZ, 'u'))] + ')';
 }
 
 function korDate_(d) {
