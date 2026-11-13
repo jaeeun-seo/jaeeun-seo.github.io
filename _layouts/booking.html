@@ -10,10 +10,17 @@
   <script>
     // Theme first (no flash), then start the API request right away, before any CSS loads.
     (function () {
-      var saved = null;
-      try { saved = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
-      var dark = saved === 'dark' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      // Same theme rule as the homepage (_layouts/default.html): device setting, unless
+      // the homepage switch stored a different choice; follows device changes live.
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var device = function () { return mq.matches ? 'dark' : 'light'; };
+      var saved = function () { try { return localStorage.getItem('theme'); } catch (e) { return null; } };
+      var refresh = function () {
+        if (saved() === device()) { try { localStorage.removeItem('theme'); } catch (e) { /* storage blocked */ } }
+        document.documentElement.dataset.theme = saved() || device();
+      };
+      refresh();
+      if (mq.addEventListener) mq.addEventListener('change', refresh); else mq.addListener(refresh);
 
       var api = window.BOOKING_API = {{ site.data.booking.api | jsonify }};
       var q = new URLSearchParams(location.search), url = null;

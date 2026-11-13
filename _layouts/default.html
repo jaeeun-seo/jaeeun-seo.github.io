@@ -7,16 +7,27 @@
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{{ site.title }}</title>
 
-  <!-- No tab icon; this stops browsers from requesting a missing /favicon.ico. -->
-  <link rel="icon" href="data:,">
+  <!-- Blank tab/bookmark icon: a fully transparent 16x16 PNG (no icon at all would show the browser's globe). -->
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAEklEQVR42mNgGAWjYBSMAggAAAQQAAGvRYgsAAAAAElFTkSuQmCC">
 
-  <!-- Theme before anything renders, so dark-mode visitors never see a white flash. -->
+  <!-- Theme before anything renders, so dark-mode visitors never see a white flash.
+       Follows the device setting; the switch stores a choice only while it differs
+       from the device (same rule in _layouts/booking.html). -->
   <script>
     (function () {
-      var saved = null;
-      try { saved = localStorage.getItem('theme'); } catch (e) { /* storage blocked */ }
-      var dark = saved === 'dark' || (saved === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var device = function () { return mq.matches ? 'dark' : 'light'; };
+      var saved = function () { try { return localStorage.getItem('theme'); } catch (e) { return null; } };
+      var store = function (t) {
+        try { if (t === device()) localStorage.removeItem('theme'); else localStorage.setItem('theme', t); } catch (e) { /* storage blocked */ }
+      };
+      var refresh = function () {
+        if (saved() === device()) store(device());          // choice now matches the device -> back to automatic
+        document.documentElement.dataset.theme = saved() || device();
+      };
+      window.chooseTheme = function (t) { store(t); refresh(); };
+      refresh();
+      if (mq.addEventListener) mq.addEventListener('change', refresh); else mq.addListener(refresh);
     })();
   </script>
 
@@ -60,13 +71,15 @@
     const slider = document.getElementById('theme-switch');
     const root   = document.documentElement;
 
-    if (root.dataset.theme === 'dark') slider.classList.add('active');   // theme was set in <head>
+    // The theme itself is decided in <head>; the switch only mirrors it.
+    const syncSlider = () => slider.classList.toggle('active', root.dataset.theme === 'dark');
+    syncSlider();
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) mq.addEventListener('change', syncSlider); else mq.addListener(syncSlider);
 
     slider.addEventListener('click', () => {
-      const nextIsDark = slider.classList.toggle('active');
-      const nextTheme = nextIsDark ? 'dark' : 'light';
-      root.dataset.theme = nextTheme;
-      try { localStorage.setItem('theme', nextTheme); } catch (e) { /* storage blocked */ }
+      chooseTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+      syncSlider();
     });
   </script>
   <script>
