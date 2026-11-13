@@ -7,8 +7,8 @@
   <meta name="description" content="{{ page.description | default: site.description }}">
   <title>{{ site.title }}</title>
 
-  <!-- Blank tab/bookmark icon: a fully transparent 16x16 PNG (no icon at all would show the browser's globe). -->
-  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAEklEQVR42mNgGAWjYBSMAggAAAQQAAGvRYgsAAAAAElFTkSuQmCC">
+  <!-- No tab icon; this stops browsers from requesting a missing /favicon.ico. -->
+  <link rel="icon" href="data:,">
 
   <!-- Theme before anything renders, so dark-mode visitors never see a white flash.
        Follows the device setting; the switch stores a choice only while it differs
