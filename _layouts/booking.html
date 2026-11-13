@@ -7,6 +7,12 @@
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
   <title>미팅 예약 · {{ site.title }}</title>
+  <!-- Tab icon: green in light theme, blue in dark (swapped by the theme script below). -->
+  <link rel="icon" type="image/svg+xml" id="bk-icon-svg" href="{{ '/assets/booking/icon-book.svg' | relative_url }}"
+        data-light="{{ '/assets/booking/icon-book.svg' | relative_url }}" data-dark="{{ '/assets/booking/icon-book-dark.svg' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32" id="bk-icon-png" href="{{ '/assets/booking/icon-book-32.png' | relative_url }}"
+        data-light="{{ '/assets/booking/icon-book-32.png' | relative_url }}" data-dark="{{ '/assets/booking/icon-book-dark-32.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/booking/icon-book.png' | relative_url }}">
   <script>
     // Theme first (no flash), then start the API request right away, before any CSS loads.
     (function () {
@@ -17,7 +23,12 @@
       var saved = function () { try { return localStorage.getItem('theme'); } catch (e) { return null; } };
       var refresh = function () {
         if (saved() === device()) { try { localStorage.removeItem('theme'); } catch (e) { /* storage blocked */ } }
-        document.documentElement.dataset.theme = saved() || device();
+        var theme = saved() || device();
+        document.documentElement.dataset.theme = theme;
+        ['bk-icon-svg', 'bk-icon-png'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.href = el.getAttribute('data-' + theme);
+        });
       };
       refresh();
       if (mq.addEventListener) mq.addEventListener('change', refresh); else mq.addListener(refresh);
@@ -31,9 +42,6 @@
       }
     })();
   </script>
-  <link rel="icon" type="image/svg+xml" href="{{ '/assets/booking/icon-book.svg' | relative_url }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/booking/icon-book-32.png' | relative_url }}">
-  <link rel="apple-touch-icon" href="{{ '/assets/booking/icon-book.png' | relative_url }}">
 
   <!-- The booking API lives on Google Apps Script: open those connections early. -->
   <link rel="preconnect" href="https://script.google.com">
